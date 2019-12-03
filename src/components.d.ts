@@ -10,7 +10,10 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-  interface PwcFilter {}
+  interface PwcFilter {
+    'data': string | object[];
+    'filter': () => Promise<void>;
+  }
 }
 
 declare global {
@@ -27,7 +30,9 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface PwcFilter {}
+  interface PwcFilter {
+    'data'?: string | object[];
+  }
 
   interface IntrinsicElements {
     'pwc-filter': PwcFilter;

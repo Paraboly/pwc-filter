@@ -12,9 +12,121 @@
     <script nomodule src="/build/pwc-filter.js"></script>
   </head>
   <body>
-    <pwc-filter
-      first="Stencil"
-      last="'Don't call me a framework' JS"
-    ></pwc-filter>
+    <pwc-filter>
+      <pwc-dynamic-form>
+        <pwc-dynamic-form-content> </pwc-dynamic-form-content>
+        <pwc-dynamic-form-buttons> </pwc-dynamic-form-buttons>
+      </pwc-dynamic-form>
+    </pwc-filter>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const pwcFilter = document.querySelector("pwc-filter");
+        pwcFilter.data = {
+          items: [
+            {
+              index: 1,
+              foo: 41,
+              bar: 19.8397,
+              baz: "Kristine",
+              thud: "Matthews",
+              quax: "Randy Zimmerman",
+              grunt: "allison@anthony.uz",
+              bazola: true
+            },
+            {
+              index: 2,
+              foo: 18,
+              bar: 19.4668,
+              baz: "Sheryl",
+              thud: "O",
+              quax: "Martin Summers",
+              grunt: "lewis@erickson.om",
+              bazola: false
+            },
+            {
+              index: 3,
+              foo: 26,
+              bar: 15.868,
+              baz: "Charlene",
+              thud: "Henry",
+              quax: "Faye Coble",
+              grunt: "alvin@li.gm",
+              bazola: false
+            },
+            {
+              index: 4,
+              foo: 35,
+              bar: 16.9081,
+              baz: "Brooke",
+              thud: "Cross",
+              quax: "Jill Dawson",
+              grunt: "lewis@connolly.no",
+              bazola: true
+            },
+            {
+              index: 5,
+              foo: 15,
+              bar: 16.0845,
+              baz: "Cathy",
+              thud: "Tyson",
+              quax: "Sherri Teague",
+              grunt: "milton@mcmillan.as",
+              bazola: false
+            },
+            {
+              index: 6,
+              foo: 18,
+              bar: 16.3167,
+              baz: "Doris",
+              thud: "Kennedy",
+              quax: "Pauline Curry",
+              grunt: "george@starr.sz",
+              bazola: false
+            },
+            {
+              index: 7,
+              foo: 46,
+              bar: 10.5112,
+              baz: "Joann",
+              thud: "Blackwell",
+              quax: "Shannon Foster",
+              grunt: "louis@james.cl",
+              bazola: false
+            },
+            {
+              index: 8,
+              foo: 10,
+              bar: 12.8977,
+              baz: "Amanda",
+              thud: "Houston",
+              quax: "Oscar Cannon",
+              grunt: "victor@scott.cl",
+              bazola: true
+            },
+            {
+              index: 9,
+              foo: 40,
+              bar: 13.304,
+              baz: "Colleen",
+              thud: "Gross",
+              quax: "Theodore May",
+              grunt: "grace@casey.ms",
+              bazola: false
+            },
+            {
+              index: 10,
+              foo: 38,
+              bar: 11.7118,
+              baz: "Rita",
+              thud: "Bailey",
+              quax: "Christopher Baldwin",
+              grunt: "sandra@king.edu",
+              bazola: true
+            }
+          ]
+        };
+      });
+    </script>
   </body>
 </html>
