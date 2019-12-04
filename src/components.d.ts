@@ -7,12 +7,16 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
-
+import {
+  stringToAnyDict,
+  stringToStringDict,
+} from './utils/type-aliases';
 
 export namespace Components {
   interface PwcFilter {
-    'data': string | object[];
-    'filter': () => Promise<void>;
+    'data': string | stringToAnyDict[];
+    'getFilteredData': () => Promise<stringToAnyDict[]>;
+    'mapping': string | stringToStringDict[];
   }
 }
 
@@ -31,7 +35,8 @@ declare global {
 
 declare namespace LocalJSX {
   interface PwcFilter {
-    'data'?: string | object[];
+    'data'?: string | stringToAnyDict[];
+    'mapping'?: string | stringToStringDict[];
   }
 
   interface IntrinsicElements {
