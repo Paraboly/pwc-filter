@@ -12,11 +12,24 @@
     <script nomodule src="/build/pwc-filter.js"></script>
   </head>
   <body>
-    <pwc-filter>
-      <pwc-dynamic-form>
-        <pwc-dynamic-form-content> </pwc-dynamic-form-content>
-      </pwc-dynamic-form>
-    </pwc-filter>
+    <pwc-filter
+      mapping='[
+        "foo": "foo_element"
+        "bar": "bar_element"
+      ]'
+      config='{
+      "items": [
+        {
+          "type": "select-multiple",
+          "name": "foo_element"
+        },
+        {
+          "type": "select-multiple",
+          "name": "bar_element"
+        }
+      ]
+    }'
+    ></pwc-filter>
 
     <script>
       const data = {
