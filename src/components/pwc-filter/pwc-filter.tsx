@@ -59,6 +59,9 @@ export class PwcFilterComponent {
           formElementValue
         );
 
+        console.log("filter step result:");
+        console.log(new_filtered_data);
+
         filtered_data = new_filtered_data;
       }
     }
