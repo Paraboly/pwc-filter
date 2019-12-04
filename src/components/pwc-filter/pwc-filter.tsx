@@ -19,16 +19,22 @@ export class PwcFilterComponent {
   @Element() rootElement: HTMLPwcFilterElement;
 
   @State() data_resolved: object[];
-
   @Prop() data: string | object[];
-
   @Watch("data")
   dataWatchHandler(newValue) {
     this.data_resolved = resolveJson(newValue);
   }
 
+  @State() mapping_resolved: object[];
+  @Prop() mapping: string | object[];
+  @Watch("data")
+  mappingWatchHandler(newValue) {
+    this.mapping_resolved = resolveJson(newValue);
+  }
+
   componentWillLoad() {
     this.dataWatchHandler(this.data);
+    this.mappingWatchHandler(this.mapping);
   }
 
   componentDidLoad() {
@@ -42,6 +48,10 @@ export class PwcFilterComponent {
   render() {
     console.log("data");
     console.log(this.data);
+
+    console.log("mapping");
+    console.log(this.mapping);
+
     return (
       <div>
         <slot />

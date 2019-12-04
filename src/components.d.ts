@@ -13,6 +13,7 @@ export namespace Components {
   interface PwcFilter {
     'data': string | object[];
     'filter': () => Promise<void>;
+    'mapping': string | object[];
   }
 }
 
@@ -32,6 +33,7 @@ declare global {
 declare namespace LocalJSX {
   interface PwcFilter {
     'data'?: string | object[];
+    'mapping'?: string | object[];
   }
 
   interface IntrinsicElements {
