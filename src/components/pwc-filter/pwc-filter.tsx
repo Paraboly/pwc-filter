@@ -18,7 +18,7 @@ import { resolveJson } from "../../utils/utils";
 @Component({
   tag: "pwc-filter",
   styleUrl: "pwc-filter.css",
-  shadow: true
+  shadow: false
 })
 export class PwcFilterComponent {
   @Element() rootElement: HTMLPwcFilterElement;
@@ -41,7 +41,6 @@ export class PwcFilterComponent {
 
   @Listen("formChanged")
   async formChangedHandler(formChangedEvent: FormChangedEvent) {
-    console.log("Received the custom event: ", formChangedEvent);
     const filterResult = await this.filter();
     this.filterChanged.emit(filterResult);
   }
@@ -54,8 +53,6 @@ export class PwcFilterComponent {
     let filtered_data = this.data_resolved;
 
     const formValues = await dynamicForm.getFieldValues(true);
-    console.log("form values");
-    console.log(formValues);
 
     for (const formElementName in formValues) {
       if (formValues.hasOwnProperty(formElementName)) {
@@ -66,9 +63,6 @@ export class PwcFilterComponent {
           formElementName,
           formElementValue
         );
-
-        console.log("filter step result:");
-        console.log(new_filtered_data);
 
         filtered_data = new_filtered_data;
       }
@@ -82,10 +76,6 @@ export class PwcFilterComponent {
     formElementName: string,
     formElementValue: boolean | string | string[]
   ) {
-    console.log(
-      "filtering key: " + formElementName + " value: " + formElementValue
-    );
-
     if (
       formElementValue === undefined ||
       formElementValue === null ||
@@ -121,12 +111,6 @@ export class PwcFilterComponent {
   }
 
   render() {
-    console.log("data");
-    console.log(this.data);
-
-    console.log("mapping");
-    console.log(this.mapping);
-
     return (
       <div>
         <slot />
