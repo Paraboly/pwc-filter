@@ -34,6 +34,7 @@ declare namespace LocalJSX {
   interface PwcFilter {
     'data'?: string | object[];
     'mapping'?: string | { [key: string]: string };
+    'onFilterChanged'?: (event: CustomEvent<object[]>) => void;
   }
 
   interface IntrinsicElements {

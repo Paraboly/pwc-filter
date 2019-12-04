@@ -185,6 +185,13 @@
             console.log(filtered);
           });
         });
+
+        pwcFilter.addEventListener("filterChanged", e => {
+          console.log("filter changed event:");
+          console.log(e);
+          console.log("new filter result:");
+          console.log(e.detail);
+        });
       });
     </script>
   </body>

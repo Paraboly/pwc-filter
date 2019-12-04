@@ -1,15 +1,19 @@
 import "@paraboly/pwc-dynamic-form";
+import { FormChangedEvent } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/DynamicFormEvents";
 import {
   Component,
   Element,
+  Event,
+  EventEmitter,
   h,
+  Listen,
   Method,
   Prop,
   State,
   Watch
 } from "@stencil/core";
-import { resolveJson } from "../../utils/utils";
 import Enumerable from "linq";
+import { resolveJson } from "../../utils/utils";
 
 @Component({
   tag: "pwc-filter",
@@ -33,9 +37,13 @@ export class PwcFilterComponent {
     this.mapping_resolved = resolveJson(newValue);
   }
 
-  componentWillLoad() {
-    this.dataWatchHandler(this.data);
-    this.mappingWatchHandler(this.mapping);
+  @Event() filterChanged: EventEmitter<object[]>;
+
+  @Listen("formChanged")
+  async formChangedHandler(formChangedEvent: FormChangedEvent) {
+    console.log("Received the custom event: ", formChangedEvent);
+    const filterResult = await this.filter();
+    this.filterChanged.emit(filterResult);
   }
 
   @Method() async filter(): Promise<object[]> {
@@ -105,6 +113,11 @@ export class PwcFilterComponent {
         )
         .toArray();
     }
+  }
+
+  componentWillLoad() {
+    this.dataWatchHandler(this.data);
+    this.mappingWatchHandler(this.mapping);
   }
 
   render() {
