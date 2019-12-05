@@ -1,17 +1,200 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Stencil Component Starter</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Stencil Component Starter</title>
 
-  <script type="module" src="/build/stencil-starter-project-name.esm.js"></script>
-  <script nomodule src="/build/stencil-starter-project-name.js"></script>
+    <script type="module" src="/build/pwc-filter.esm.js"></script>
+    <script nomodule src="/build/pwc-filter.js"></script>
+  </head>
+  <body>
+    <pwc-filter>
+      <pwc-dynamic-form>
+        <pwc-dynamic-form-content> </pwc-dynamic-form-content>
+      </pwc-dynamic-form>
+    </pwc-filter>
 
-</head>
-<body>
+    <hr />
 
-  <my-component first="Stencil" last="'Don't call me a framework' JS"></my-component>
+    <input type="button" id="filter-to-console" value="Filter to console" />
 
-</body>
+    <script>
+      // An arbitrary dataset to test the filter.
+      // It has no significance on its own.
+      const data = [
+        {
+          index: 1,
+          foo: 41,
+          bar: 19.8397,
+          baz: "Kristine",
+          thud: "Matthews",
+          quax: "Randy Zimmerman",
+          grunt: "allison@anthony.uz",
+          bazola: true
+        },
+        {
+          index: 2,
+          foo: 18,
+          bar: 19.4668,
+          baz: "Sheryl",
+          thud: "Somebody",
+          quax: "Martin Summers",
+          grunt: "lewis@erickson.om",
+          bazola: false
+        },
+        {
+          index: 3,
+          foo: 26,
+          bar: 15.868,
+          baz: "Charlene",
+          thud: "Henry",
+          quax: "Faye Coble",
+          grunt: "alvin@li.gm",
+          bazola: false
+        },
+        {
+          index: 4,
+          foo: 35,
+          bar: 16.9081,
+          baz: "Brooke",
+          thud: "Cross",
+          quax: "Jill Dawson",
+          grunt: "lewis@connolly.no",
+          bazola: true
+        },
+        {
+          index: 5,
+          foo: 15,
+          bar: 16.0845,
+          baz: "Cathy",
+          thud: "Tyson",
+          quax: "Sherri Teague",
+          grunt: "milton@mcmillan.as",
+          bazola: false
+        },
+        {
+          index: 6,
+          foo: 18,
+          bar: 16.3167,
+          baz: "Doris",
+          thud: "Kennedy",
+          quax: "Pauline Curry",
+          grunt: "george@starr.sz",
+          bazola: false
+        },
+        {
+          index: 7,
+          foo: 46,
+          bar: 10.5112,
+          baz: "Joann",
+          thud: "Blackwell",
+          quax: "Shannon Foster",
+          grunt: "louis@james.cl",
+          bazola: false
+        },
+        {
+          index: 8,
+          foo: 10,
+          bar: 12.8977,
+          baz: "Amanda",
+          thud: "Houston",
+          quax: "Oscar Cannon",
+          grunt: "victor@scott.cl",
+          bazola: true
+        },
+        {
+          index: 9,
+          foo: 40,
+          bar: 13.304,
+          baz: "Colleen",
+          thud: "Gross",
+          quax: "Theodore May",
+          grunt: "grace@casey.ms",
+          bazola: false
+        },
+        {
+          index: 10,
+          foo: 38,
+          bar: 11.7118,
+          baz: "Rita",
+          thud: "Bailey",
+          quax: "Christopher Baldwin",
+          grunt: "sandra@king.edu",
+          bazola: true
+        }
+      ];
+
+      document.addEventListener("DOMContentLoaded", function() {
+        const pwcFilter = document.querySelector("pwc-filter");
+        const pwcDynamicFormContent = pwcFilter.querySelector(
+          "pwc-dynamic-form-content"
+        );
+
+        // Step 1: Configure the dynamic form.
+        pwcDynamicFormContent.config = {
+          fields: [
+            {
+              type: "select-multiple",
+              name: "foo_elem",
+              label: "foo",
+              choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
+            },
+            {
+              type: "select-single",
+              name: "thud_elem",
+              label: "thud",
+              choices: data.map(d => ({
+                value: d["thud"],
+                label: d["thud"]
+              }))
+            },
+            {
+              type: "checkbox",
+              name: "bazola_elem",
+              label: "bazola"
+            }
+          ]
+        };
+
+        // Step 2: Assign the data to the filter.
+        pwcFilter.data = data;
+
+        // Step 3: Instruct the filter which dynamic form element
+        // name corresponds to which data field.
+        // The format is as follows: (element name: data field)
+        pwcFilter.mapping = {
+          foo_elem: "foo",
+          thud_elem: "thud",
+          bazola_elem: "bazola"
+        };
+
+        // You can listen to the "filterChaned" event to get the
+        // freshly filtered data when the dynamic form changes.
+        pwcFilter.addEventListener("filterChanged", e => {
+          console.log("filter changed event:");
+          console.log(e);
+          console.log("new filter result:");
+          console.log(e.detail.filterResult);
+        });
+
+        // You can also get hte values manually if you wish.
+        // We provide a "filter()" method that filters the data
+        // with the current state of the form.
+        // Here, we hook up to a buttons's onClick event and
+        // print the filtered data to the console.
+        document
+          .querySelector("#filter-to-console")
+          .addEventListener("click", e => {
+            pwcFilter.filter().then(filtered => {
+              console.log("filtered data: ");
+              console.log(filtered);
+            });
+          });
+      });
+    </script>
+  </body>
 </html>
