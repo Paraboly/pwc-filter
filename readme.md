@@ -14,7 +14,7 @@
         src="https://raw.githubusercontent.com/paraboly/pwc-filter/master/assets/Screenshots/JSLibraryBoilerplate.png" />
 </p>
 
-## [Live Codepen Example](https://codepen.io/wrathchaos/pen/dyyvRzM)
+## [Live JSFiddle Example](https://jsfiddle.net/starikcetin/604c75pd/)
 
 ## Installation
 
