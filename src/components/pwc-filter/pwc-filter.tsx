@@ -14,6 +14,7 @@ import {
 } from "@stencil/core";
 import Enumerable from "linq";
 import { resolveJson } from "../../utils/utils";
+import { PwcFilterInterfaces } from "./PwcFilterInterfaces";
 
 @Component({
   tag: "pwc-filter",
@@ -23,26 +24,31 @@ import { resolveJson } from "../../utils/utils";
 export class PwcFilterComponent {
   @Element() rootElement: HTMLPwcFilterElement;
 
-  @State() data_resolved: object[];
+  @State() resolvedData: object[];
   @Prop() data: string | object[];
   @Watch("data")
-  dataWatchHandler(newValue) {
-    this.data_resolved = resolveJson(newValue);
+  dataWatchHandler(newDataValue: string | object[]) {
+    this.resolvedData = resolveJson(newDataValue);
   }
 
-  @State() mapping_resolved: { [key: string]: string };
+  @State() resolvedMapping: { [key: string]: string };
   @Prop() mapping: string | { [key: string]: string };
   @Watch("mapping")
-  mappingWatchHandler(newValue) {
-    this.mapping_resolved = resolveJson(newValue);
+  mappingWatchHandler(newMappingValue: string | { [key: string]: string }) {
+    this.resolvedMapping = resolveJson(newMappingValue);
   }
 
-  @Event() filterChanged: EventEmitter<object[]>;
+  @Event() filterChanged: EventEmitter<
+    PwcFilterInterfaces.FilterChangedEventPayload
+  >;
 
   @Listen("formChanged")
   async formChangedHandler(formChangedEvent: FormChangedEvent) {
     const filterResult = await this.filter();
-    this.filterChanged.emit(filterResult);
+    this.filterChanged.emit({
+      originalEvent: formChangedEvent,
+      filterResult: filterResult
+    });
   }
 
   @Method() async filter(): Promise<object[]> {
@@ -50,7 +56,7 @@ export class PwcFilterComponent {
       "pwc-dynamic-form"
     ) as HTMLPwcDynamicFormElement;
 
-    let filtered_data = this.data_resolved;
+    let filteredData = this.resolvedData;
 
     const formValues = await dynamicForm.getFieldValues(true);
 
@@ -58,21 +64,21 @@ export class PwcFilterComponent {
       if (formValues.hasOwnProperty(formElementName)) {
         const formElementValue = formValues[formElementName];
 
-        const new_filtered_data = this.filterFor(
-          filtered_data,
+        const newFilteredData = this.filterFor(
+          filteredData,
           formElementName,
           formElementValue
         );
 
-        filtered_data = new_filtered_data;
+        filteredData = newFilteredData;
       }
     }
 
-    return filtered_data;
+    return filteredData;
   }
 
   filterFor(
-    data_resolved: object[],
+    resolvedData: object[],
     formElementName: string,
     formElementValue: boolean | string | string[]
   ) {
@@ -81,20 +87,20 @@ export class PwcFilterComponent {
       formElementValue === null ||
       (typeof formElementValue !== "boolean" && formElementValue.length === 0)
     ) {
-      return data_resolved;
+      return resolvedData;
     }
 
-    const jsonFieldName = this.mapping_resolved[formElementName];
+    const jsonFieldName = this.resolvedMapping[formElementName];
 
     if (
       typeof formElementValue === "string" ||
       typeof formElementValue === "boolean"
     ) {
-      return Enumerable.from(data_resolved)
+      return Enumerable.from(resolvedData)
         .where(datum => datum[jsonFieldName] == formElementValue)
         .toArray();
     } else {
-      return Enumerable.from(data_resolved)
+      return Enumerable.from(resolvedData)
         .where(datum =>
           Enumerable.from(formElementValue).any(
             formElementValueSingle =>

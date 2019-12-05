@@ -23,6 +23,8 @@
     <input type="button" id="filter-to-console" value="Filter to console" />
 
     <script>
+      // An arbitrary dataset to test the filter.
+      // It has no significance on its own.
       const data = [
         {
           index: 1,
@@ -132,27 +134,23 @@
           "pwc-dynamic-form-content"
         );
 
-        pwcFilter.data = data;
-
-        pwcFilter.mapping = {
-          foo_elem: "foo",
-          thud_elem: "thud",
-          bazola_elem: "bazola"
-        };
-
+        // Step 1: Configure the dynamic form.
         pwcDynamicFormContent.config = {
           fields: [
             {
               type: "select-multiple",
               name: "foo_elem",
               label: "foo",
-              choices: createChoices(getValues("foo", data))
+              choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
             },
             {
               type: "select-single",
               name: "thud_elem",
               label: "thud",
-              choices: createChoices(getValues("thud", data))
+              choices: data.map(d => ({
+                value: d["thud"],
+                label: d["thud"]
+              }))
             },
             {
               type: "checkbox",
@@ -162,36 +160,40 @@
           ]
         };
 
-        function getValues(name, data) {
-          const returnArr = [];
-          data.forEach(di => returnArr.push(di[name]));
-          console.log(returnArr);
-          return returnArr;
-        }
+        // Step 2: Assign the data to the filter.
+        pwcFilter.data = data;
 
-        function createChoices(values) {
-          const returnArr = [];
-          values.forEach(v => returnArr.push({ value: v, label: v }));
-          return returnArr;
-        }
+        // Step 3: Instruct the filter which dynamic form element
+        // name corresponds to which data field.
+        // The format is as follows: (element name: data field)
+        pwcFilter.mapping = {
+          foo_elem: "foo",
+          thud_elem: "thud",
+          bazola_elem: "bazola"
+        };
 
-        const filterToConsoleButton = document.querySelector(
-          "#filter-to-console"
-        );
-
-        filterToConsoleButton.addEventListener("click", e => {
-          pwcFilter.filter().then(filtered => {
-            console.log("filtered: ");
-            console.log(filtered);
-          });
-        });
-
+        // You can listen to the "filterChaned" event to get the
+        // freshly filtered data when the dynamic form changes.
         pwcFilter.addEventListener("filterChanged", e => {
           console.log("filter changed event:");
           console.log(e);
           console.log("new filter result:");
-          console.log(e.detail);
+          console.log(e.detail.filterResult);
         });
+
+        // You can also get hte values manually if you wish.
+        // We provide a "filter()" method that filters the data
+        // with the current state of the form.
+        // Here, we hook up to a buttons's onClick event and
+        // print the filtered data to the console.
+        document
+          .querySelector("#filter-to-console")
+          .addEventListener("click", e => {
+            pwcFilter.filter().then(filtered => {
+              console.log("filtered data: ");
+              console.log(filtered);
+            });
+          });
       });
     </script>
   </body>

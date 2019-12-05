@@ -1,7 +1,7 @@
 {
   "name": "@paraboly/pwc-filter",
   "version": "0.0.1",
-  "description": "Template repository for Paraboly Web Component Libraries",
+  "description": "Automatically filter a set of data using a dynamic form.",
   "keywords": [
     "paraboly",
     "stencil",
