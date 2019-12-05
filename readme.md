@@ -45,6 +45,13 @@
 
 TODO
 
+## Future Plans
+
+- [ ] Documentation
+- [x] ~~LICENSE~~
+- [ ] Deep data field search
+- [ ] Automatic generation of the dynamic form
+
 ## Authors
 
 S. Tarık Çetin (starikcetin), tarik.cetin@paraboly.com | cetinsamedtarik@gmail.com
