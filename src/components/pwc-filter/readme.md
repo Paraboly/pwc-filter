@@ -2,14 +2,35 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
-| Property | Attribute | Description     | Type     | Default     |
-| -------- | --------- | --------------- | -------- | ----------- |
-| `first`  | `first`   | The first name  | `string` | `undefined` |
-| `last`   | `last`    | The last name   | `string` | `undefined` |
-| `middle` | `middle`  | The middle name | `string` | `undefined` |
+| Property  | Attribute | Description | Type                                   | Default     |
+| --------- | --------- | ----------- | -------------------------------------- | ----------- |
+| `data`    | `data`    |             | `object[] \| string`                   | `undefined` |
+| `mapping` | `mapping` |             | `string \| { [key: string]: string; }` | `undefined` |
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+## Events
+
+| Event           | Description | Type                                     |
+| --------------- | ----------- | ---------------------------------------- |
+| `filterChanged` |             | `CustomEvent<FilterChangedEventPayload>` |
+
+
+## Methods
+
+### `filter() => Promise<object[]>`
+
+
+
+#### Returns
+
+Type: `Promise<object[]>`
+
+
+
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*
