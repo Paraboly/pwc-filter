@@ -14,7 +14,7 @@ import {
 } from "@stencil/core";
 import Enumerable from "linq";
 import { resolveJson } from "../../utils/utils";
-import { PwcFilterInterfaces } from "./PwcFilterInterfaces";
+import { FilterChangedEventPayload } from "./FilterInterfaces";
 
 @Component({
   tag: "pwc-filter",
@@ -38,9 +38,7 @@ export class PwcFilterComponent {
     this.resolvedMapping = resolveJson(newMappingValue);
   }
 
-  @Event() filterChanged: EventEmitter<
-    PwcFilterInterfaces.FilterChangedEventPayload
-  >;
+  @Event() filterChanged: EventEmitter<FilterChangedEventPayload>;
 
   @Listen("formChanged")
   async formChangedHandler(FormChangedEventPayload: FormChangedEventPayload) {
