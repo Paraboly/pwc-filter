@@ -1,5 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
-import { FormChangedEvent } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/DynamicFormEvents";
+import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/DynamicFormEvents";
 import {
   Component,
   Element,
@@ -43,10 +43,10 @@ export class PwcFilterComponent {
   >;
 
   @Listen("formChanged")
-  async formChangedHandler(formChangedEvent: FormChangedEvent) {
+  async formChangedHandler(FormChangedEventPayload: FormChangedEventPayload) {
     const filterResult = await this.filter();
     this.filterChanged.emit({
-      originalEvent: formChangedEvent,
+      originalEvent: FormChangedEventPayload,
       filterResult: filterResult
     });
   }

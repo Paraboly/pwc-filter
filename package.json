@@ -1,6 +1,6 @@
 {
   "name": "@paraboly/pwc-filter",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Automatically filter a set of data using a dynamic form.",
   "keywords": [
     "paraboly",
@@ -40,7 +40,7 @@
     "@stencil/core": "^1.3.3"
   },
   "dependencies": {
-    "@paraboly/pwc-dynamic-form": "0.0.7",
+    "@paraboly/pwc-dynamic-form": "0.1.1",
     "@types/linq": "^2.2.33",
     "linq": "^3.2.1"
   }
