@@ -164,30 +164,28 @@
           ];
 
           // Step 1: Configure the dynamic form.
-          pwcDynamicFormContent.config = {
-            fields: [
-              {
-                type: "select-multiple",
-                name: "foo_elem",
-                label: "foo",
-                choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
-              },
-              {
-                type: "select-single",
-                name: "thud_elem",
-                label: "thud",
-                choices: data.map(d => ({
-                  value: d["thud"],
-                  label: d["thud"]
-                }))
-              },
-              {
-                type: "checkbox",
-                name: "bazola",
-                label: "bazola"
-              }
-            ]
-          };
+          pwcDynamicFormContent.items = [
+            {
+              type: "select-multiple",
+              name: "foo_elem",
+              label: "foo",
+              choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
+            },
+            {
+              type: "select-single",
+              name: "thud_elem",
+              label: "thud",
+              choices: data.map(d => ({
+                value: d["thud"],
+                label: d["thud"]
+              }))
+            },
+            {
+              type: "checkbox",
+              name: "bazola",
+              label: "bazola"
+            }
+          ];
 
           // Step 2: Assign the data to the filter.
           pwcFilter.data = data;
@@ -198,7 +196,8 @@
           pwcFilter.mapping = {
             foo_elem: "foo",
             thud_elem: "thud"
-            // Notice we didn't specify bazola's mapping, since the element name and field name are the same, it will get auto-resolved.
+            // Notice we didn't specify 'bazola's mapping, since the element
+            // name and field name are the same, it will get auto-resolved.
           };
         }
       });
