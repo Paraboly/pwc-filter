@@ -77,6 +77,12 @@ export class PwcFilterComponent {
     return filteredData;
   }
 
+  getMappedNameOrDefault(formElementName: string): string {
+    return this.resolvedMapping.hasOwnProperty(formElementName)
+      ? this.resolvedMapping[formElementName]
+      : formElementName;
+  }
+
   filterFor(
     resolvedData: object[],
     formElementName: string,
@@ -90,7 +96,7 @@ export class PwcFilterComponent {
       return resolvedData;
     }
 
-    const jsonFieldName = this.resolvedMapping[formElementName];
+    const jsonFieldName = this.getMappedNameOrDefault(formElementName);
 
     if (
       typeof formElementValue === "string" ||

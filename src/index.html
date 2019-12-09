@@ -183,7 +183,7 @@
               },
               {
                 type: "checkbox",
-                name: "bazola_elem",
+                name: "bazola",
                 label: "bazola"
               }
             ]
@@ -197,8 +197,8 @@
           // The format is as follows: (element name: data field)
           pwcFilter.mapping = {
             foo_elem: "foo",
-            thud_elem: "thud",
-            bazola_elem: "bazola"
+            thud_elem: "thud"
+            // Notice we didn't specify bazola's mapping, since the element name and field name are the same, it will get auto-resolved.
           };
         }
       });
