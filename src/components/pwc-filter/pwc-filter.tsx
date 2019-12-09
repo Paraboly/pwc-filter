@@ -52,6 +52,12 @@ export class PwcFilterComponent {
   }
 
   @Method() async filter(): Promise<object[]> {
+    if (!this.resolvedMapping) {
+      console.warn(
+        "Mapping is not provided! All names will fall to default mapping."
+      );
+    }
+
     const dynamicForm = this.rootElement.querySelector(
       "pwc-dynamic-form"
     ) as HTMLPwcDynamicFormElement;
@@ -78,7 +84,8 @@ export class PwcFilterComponent {
   }
 
   getMappedNameOrDefault(formElementName: string): string {
-    return this.resolvedMapping.hasOwnProperty(formElementName)
+    return this.resolvedMapping &&
+      this.resolvedMapping.hasOwnProperty(formElementName)
       ? this.resolvedMapping[formElementName]
       : formElementName;
   }
