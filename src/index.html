@@ -54,8 +54,84 @@
 
         (async function() {
           await waitForSecondsAndInit(2);
-          init();
+          // init();
+          initForDeepSearch();
         })();
+
+        function initForDeepSearch() {
+          const data = [
+            {
+              a: [
+                {
+                  b: [
+                    {
+                      c: "foo",
+                      d: "non_relevant_value"
+                    },
+                    {
+                      c: "bar",
+                      d: "non_relevant_value"
+                    }
+                  ],
+                  e: "first one"
+                }
+              ]
+            },
+            {
+              a: [
+                {
+                  b: [
+                    {
+                      c: "baz",
+                      d: "non_relevant_value"
+                    },
+                    {
+                      c: "bar",
+                      d: "non_relevant_value"
+                    }
+                  ],
+                  e: "second one"
+                }
+              ]
+            },
+            {
+              a: [
+                {
+                  b: [
+                    {
+                      c: "foo",
+                      d: "non_relevant_value"
+                    },
+                    {
+                      c: "foo",
+                      d: "non_relevant_value"
+                    }
+                  ],
+                  e: "third one"
+                }
+              ]
+            }
+          ];
+
+          // Step 1: Configure the dynamic form.
+          pwcDynamicFormContent.items = [
+            {
+              type: "text",
+              name: "c_elem",
+              label: "a.b.c"
+            }
+          ];
+
+          // Step 2: Assign the data to the filter.
+          pwcFilter.data = data;
+
+          // Step 3: Instruct the filter which dynamic form element
+          // name corresponds to which data field.
+          // The format is as follows: (element name: data field)
+          pwcFilter.mapping = {
+            c_elem: "a.b.c"
+          };
+        }
 
         function init() {
           // An arbitrary dataset to test the filter.

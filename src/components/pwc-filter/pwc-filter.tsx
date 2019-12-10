@@ -13,7 +13,7 @@ import {
   Watch
 } from "@stencil/core";
 import Enumerable from "linq";
-import { resolveJson } from "../../utils/utils";
+import { resolveJson, isCompoundKey, deepFilter } from "../../utils/utils";
 import { FilterChangedEventPayload } from "./FilterInterfaces";
 
 @Component({
@@ -103,22 +103,27 @@ export class PwcFilterComponent {
 
     const jsonFieldName = this.getMappedNameOrDefault(formElementName);
 
-    if (
-      typeof formElementValue === "string" ||
-      typeof formElementValue === "boolean"
-    ) {
-      return Enumerable.from(resolvedData)
-        .where(datum => datum[jsonFieldName] == formElementValue)
-        .toArray();
+    if (isCompoundKey(jsonFieldName)) {
+      const vals = deepFilter(this.data, jsonFieldName, formElementValue);
+      return vals;
     } else {
-      return Enumerable.from(resolvedData)
-        .where(datum =>
-          Enumerable.from(formElementValue).any(
-            formElementValueSingle =>
-              formElementValueSingle == datum[jsonFieldName]
+      if (
+        typeof formElementValue === "string" ||
+        typeof formElementValue === "boolean"
+      ) {
+        return Enumerable.from(resolvedData)
+          .where(datum => datum[jsonFieldName] == formElementValue)
+          .toArray();
+      } else {
+        return Enumerable.from(resolvedData)
+          .where(datum =>
+            Enumerable.from(formElementValue).any(
+              formElementValueSingle =>
+                formElementValueSingle == datum[jsonFieldName]
+            )
           )
-        )
-        .toArray();
+          .toArray();
+      }
     }
   }
 
