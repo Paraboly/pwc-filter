@@ -5,10 +5,10 @@
 
 ## Properties
 
-| Property  | Attribute | Description | Type                                   | Default     |
-| --------- | --------- | ----------- | -------------------------------------- | ----------- |
-| `data`    | `data`    |             | `object[] \| string`                   | `undefined` |
-| `mapping` | `mapping` |             | `string \| { [key: string]: string; }` | `undefined` |
+| Property | Attribute | Description | Type                     | Default     |
+| -------- | --------- | ----------- | ------------------------ | ----------- |
+| `data`   | `data`    |             | `object[] \| string`     | `undefined` |
+| `items`  | `items`   |             | `ItemConfig[] \| string` | `undefined` |
 
 
 ## Events
@@ -30,6 +30,23 @@ Type: `Promise<object[]>`
 
 
 
+
+## Dependencies
+
+### Depends on
+
+- pwc-dynamic-form
+- pwc-dynamic-form-content
+
+### Graph
+```mermaid
+graph TD;
+  pwc-filter --> pwc-dynamic-form
+  pwc-filter --> pwc-dynamic-form-content
+  pwc-dynamic-form-content --> color-picker
+  pwc-dynamic-form-content --> pwc-choices
+  style pwc-filter fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

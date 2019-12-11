@@ -1,5 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
-import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormEvents";
+import { PwcDynamicForm } from "@paraboly/pwc-dynamic-form/dist/types/utils/PwcDynamicForm";
 import {
   Component,
   Element,
@@ -13,8 +13,13 @@ import {
   Watch
 } from "@stencil/core";
 import Enumerable from "linq";
-import { resolveJson } from "../../utils/utils";
-import { FilterChangedEventPayload } from "./FilterInterfaces";
+import {
+  deepFilter,
+  deepGet,
+  isCompoundKey,
+  resolveJson
+} from "../../utils/utils";
+import { PwcFilter } from "../../utils/PwcFilter";
 
 @Component({
   tag: "pwc-filter",
@@ -24,6 +29,8 @@ import { FilterChangedEventPayload } from "./FilterInterfaces";
 export class PwcFilterComponent {
   @Element() rootElement: HTMLPwcFilterElement;
 
+  private mapping: { [key: string]: string };
+
   @State() resolvedData: object[];
   @Prop() data: string | object[];
   @Watch("data")
@@ -31,31 +38,27 @@ export class PwcFilterComponent {
     this.resolvedData = resolveJson(newDataValue);
   }
 
-  @State() resolvedMapping: { [key: string]: string };
-  @Prop() mapping: string | { [key: string]: string };
-  @Watch("mapping")
-  mappingWatchHandler(newMappingValue: string | { [key: string]: string }) {
-    this.resolvedMapping = resolveJson(newMappingValue);
+  @State() resolvedItems: PwcFilter.ItemConfig[];
+  @Prop() items: string | PwcFilter.ItemConfig[];
+  @Watch("items")
+  itemsWatchHandler(newItemsValue: string | PwcFilter.ItemConfig[]) {
+    this.resolvedItems = resolveJson(newItemsValue);
   }
 
-  @Event() filterChanged: EventEmitter<FilterChangedEventPayload>;
+  @Event() filterChanged: EventEmitter<PwcFilter.FilterChangedEventPayload>;
 
   @Listen("formChanged")
-  async formChangedHandler(FormChangedEventPayload: FormChangedEventPayload) {
+  async formChangedHandler(
+    formChangedEventPayload: PwcDynamicForm.FormChangedEventPayload
+  ) {
     const filterResult = await this.filter();
     this.filterChanged.emit({
-      originalEvent: FormChangedEventPayload,
+      originalEvent: formChangedEventPayload,
       filterResult: filterResult
     });
   }
 
   @Method() async filter(): Promise<object[]> {
-    if (!this.resolvedMapping) {
-      console.warn(
-        "Mapping is not provided! All names will fall to default mapping."
-      );
-    }
-
     const dynamicForm = this.rootElement.querySelector(
       "pwc-dynamic-form"
     ) as HTMLPwcDynamicFormElement;
@@ -82,9 +85,8 @@ export class PwcFilterComponent {
   }
 
   getMappedNameOrDefault(formElementName: string): string {
-    return this.resolvedMapping &&
-      this.resolvedMapping.hasOwnProperty(formElementName)
-      ? this.resolvedMapping[formElementName]
+    return this.mapping && this.mapping.hasOwnProperty(formElementName)
+      ? this.mapping[formElementName]
       : formElementName;
   }
 
@@ -103,35 +105,132 @@ export class PwcFilterComponent {
 
     const jsonFieldName = this.getMappedNameOrDefault(formElementName);
 
-    if (
-      typeof formElementValue === "string" ||
-      typeof formElementValue === "boolean"
-    ) {
-      return Enumerable.from(resolvedData)
-        .where(datum => datum[jsonFieldName] == formElementValue)
-        .toArray();
+    if (isCompoundKey(jsonFieldName)) {
+      const vals = deepFilter(this.data, jsonFieldName, formElementValue);
+      return vals;
     } else {
-      return Enumerable.from(resolvedData)
-        .where(datum =>
-          Enumerable.from(formElementValue).any(
-            formElementValueSingle =>
-              formElementValueSingle == datum[jsonFieldName]
+      if (
+        typeof formElementValue === "string" ||
+        typeof formElementValue === "boolean"
+      ) {
+        return Enumerable.from(resolvedData)
+          .where(datum => datum[jsonFieldName] == formElementValue)
+          .toArray();
+      } else {
+        return Enumerable.from(resolvedData)
+          .where(datum =>
+            Enumerable.from(formElementValue).any(
+              formElementValueSingle =>
+                formElementValueSingle == datum[jsonFieldName]
+            )
           )
-        )
-        .toArray();
+          .toArray();
+      }
     }
   }
 
   componentWillLoad() {
     this.dataWatchHandler(this.data);
-    this.mappingWatchHandler(this.mapping);
+    this.itemsWatchHandler(this.items);
   }
 
   render() {
+    return <div>{this.generateDynamicForm()}</div>;
+  }
+
+  generateDynamicForm(): HTMLPwcDynamicFormElement {
     return (
-      <div>
-        <slot />
-      </div>
+      <pwc-dynamic-form>
+        {this.resolvedItems && this.generateDynamicFormContent()}
+      </pwc-dynamic-form>
     );
+  }
+
+  generateDynamicFormContent(): HTMLPwcDynamicFormContentElement {
+    const formElementConfigs: PwcDynamicForm.ContentItemConfig[] = [];
+    const mapping: { [key: string]: string } = {};
+
+    for (const item of this.resolvedItems) {
+      let config;
+
+      switch (item.type) {
+        case "select-multiple":
+        case "select-single":
+        case "select-text":
+          config = this.generatePwcSelectConfig(
+            item as PwcFilter.PwcSelectItemConfig
+          );
+          break;
+
+        case "color":
+          config = this.generateColorPickerConfig(
+            item as PwcFilter.ColorPickerItemConfig
+          );
+          break;
+
+        default:
+          config = this.generateNativeInputConfig(item);
+          break;
+      }
+
+      formElementConfigs.push(config);
+      mapping[config.name] = item.dataField;
+    }
+
+    this.mapping = mapping;
+
+    return (
+      <pwc-dynamic-form-content
+        items={formElementConfigs}
+      ></pwc-dynamic-form-content>
+    );
+  }
+
+  generatePwcSelectConfig(
+    item: PwcFilter.PwcSelectItemConfig
+  ): PwcDynamicForm.PwcSelectConfig {
+    const config = {
+      label: item.label,
+      type: item.type,
+      name: this.generateElementName(item.dataField),
+      choices: this.generatePwcChoices(item.dataField)
+    };
+    return config;
+  }
+
+  generateColorPickerConfig(
+    item: PwcFilter.ColorPickerItemConfig
+  ): PwcDynamicForm.ColorPickerConfig {
+    const config = {
+      label: item.label,
+      type: item.type,
+      name: this.generateElementName(item.dataField)
+    };
+    return config;
+  }
+
+  generateNativeInputConfig(
+    item: PwcFilter.ItemConfig
+  ): PwcDynamicForm.NativeInputConfig {
+    const config = {
+      label: item.label,
+      type: item.type,
+      name: this.generateElementName(item.dataField)
+    };
+    return config;
+  }
+
+  generateElementName(dataFieldName: string): string {
+    return dataFieldName.replace(".", "_") + "_elem";
+  }
+
+  generatePwcChoices(dataField: string): Array<any> {
+    const choices = deepGet(this.resolvedData, dataField).map(val => {
+      return {
+        value: val.toString(),
+        label: val.toString()
+      };
+    });
+    return choices;
   }
 }
