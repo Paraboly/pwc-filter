@@ -12,11 +12,7 @@
     <script nomodule src="/build/pwc-filter.js"></script>
   </head>
   <body>
-    <pwc-filter>
-      <pwc-dynamic-form>
-        <pwc-dynamic-form-content> </pwc-dynamic-form-content>
-      </pwc-dynamic-form>
-    </pwc-filter>
+    <pwc-filter></pwc-filter>
 
     <hr />
 
@@ -25,9 +21,6 @@
     <script>
       document.addEventListener("DOMContentLoaded", e => {
         const pwcFilter = document.querySelector("pwc-filter");
-        const pwcDynamicFormContent = pwcFilter.querySelector(
-          "pwc-dynamic-form-content"
-        );
 
         // You can also get the values manually if you wish.
         // We provide a "filter()" method that filters the data
@@ -54,8 +47,8 @@
 
         (async function() {
           await waitForSecondsAndInit(2);
-          // init();
-          initForDeepSearch();
+          init();
+          // initForDeepSearch();
         })();
 
         function initForDeepSearch() {
@@ -113,24 +106,18 @@
             }
           ];
 
-          // Step 1: Configure the dynamic form.
-          pwcDynamicFormContent.items = [
-            {
-              type: "text",
-              name: "c_elem",
-              label: "a.b.c"
-            }
-          ];
-
-          // Step 2: Assign the data to the filter.
+          // Step 1: Assign the data to the filter.
           pwcFilter.data = data;
 
-          // Step 3: Instruct the filter which dynamic form element
-          // name corresponds to which data field.
-          // The format is as follows: (element name: data field)
-          pwcFilter.mapping = {
-            c_elem: "a.b.c"
-          };
+          // Step 2: Instruct the filter how to generate form elements.
+          // The format is as follows: (data field: form element config)
+          pwcFilter.items = [
+            {
+              dataField: "a.b.c",
+              type: "text",
+              label: "a.b.c filter element"
+            }
+          ];
         }
 
         function init() {
@@ -239,42 +226,28 @@
             }
           ];
 
-          // Step 1: Configure the dynamic form.
-          pwcDynamicFormContent.items = [
-            {
-              type: "select-multiple",
-              name: "foo_elem",
-              label: "foo",
-              choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
-            },
-            {
-              type: "select-single",
-              name: "thud_elem",
-              label: "thud",
-              choices: data.map(d => ({
-                value: d["thud"],
-                label: d["thud"]
-              }))
-            },
-            {
-              type: "checkbox",
-              name: "bazola",
-              label: "bazola"
-            }
-          ];
-
-          // Step 2: Assign the data to the filter.
+          // Step 1: Assign the data to the filter.
           pwcFilter.data = data;
 
-          // Step 3: Instruct the filter which dynamic form element
-          // name corresponds to which data field.
-          // The format is as follows: (element name: data field)
-          pwcFilter.mapping = {
-            foo_elem: "foo",
-            thud_elem: "thud"
-            // Notice we didn't specify 'bazola's mapping, since the element
-            // name and field name are the same, it will get auto-resolved.
-          };
+          // Step 2: Instruct the filter how to generate form elements.
+          // The format is as follows: (data field: form element config)
+          pwcFilter.items = [
+            {
+              dataField: "foo",
+              type: "select-multiple",
+              label: "foo filter element"
+            },
+            {
+              dataField: "thud",
+              type: "select-multiple",
+              label: "thud filter element"
+            },
+            {
+              dataField: "bazola",
+              type: "checkbox",
+              label: "bazola filter element"
+            }
+          ];
         }
       });
 

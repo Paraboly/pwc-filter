@@ -1,4 +1,4 @@
-import Enumerable from "linq";
+import Enumerable, { IEnumerable } from "linq";
 
 export function resolveJson<TReturnType>(
   input: string | TReturnType
@@ -7,7 +7,6 @@ export function resolveJson<TReturnType>(
 }
 
 export function deepFilter(data: any, key: string, value: any) {
-  console.log("hello?");
   const navigationSteps = key.split(".");
   const navStepIndex = 0;
 
@@ -16,7 +15,7 @@ export function deepFilter(data: any, key: string, value: any) {
     .toArray();
 
   function deepValidate(currentObj, navStepIndex: number): boolean {
-    // if we are out of navigaiton steps, check for the value
+    // if we are out of navigation steps, check for the value
     if (navStepIndex === navigationSteps.length) {
       return currentObj == value;
     }
@@ -25,8 +24,8 @@ export function deepFilter(data: any, key: string, value: any) {
 
     if (currentObj instanceof Array) {
       // if we have an array, any element of it needs to match
-      return Enumerable.from(currentObj).any(x =>
-        deepValidate(x[navStep], navStepIndex + 1)
+      return Enumerable.from(currentObj).any(arrayItem =>
+        deepValidate(arrayItem[navStep], navStepIndex + 1)
       );
     } else {
       // if we have a single element, then it needs to match
@@ -37,4 +36,39 @@ export function deepFilter(data: any, key: string, value: any) {
 
 export function isCompoundKey(key: string): boolean {
   return key.includes(".");
+}
+
+export function last<T>(arr: Array<T>): T {
+  return arr[arr.length - 1];
+}
+
+export function deepGet(data: any, key: string): Array<any> {
+  console.log("here I ammmmm");
+  const navigationSteps = key.split(".");
+  const navStepIndex = 0;
+
+  return Enumerable.from(data)
+    .selectMany(datum => deepRetreive(datum, navStepIndex))
+    .toArray();
+
+  function deepRetreive(currentObj, navStepIndex: number): Array<any> {
+    // if we are out of navigation steps, return the value.
+    if (navStepIndex === navigationSteps.length) {
+      return [currentObj];
+    }
+
+    const navStep = navigationSteps[navStepIndex];
+
+    if (currentObj instanceof Array) {
+      // if we have an array, return all of the elements.
+      return Enumerable.from(currentObj)
+        .selectMany(arrayItem =>
+          deepRetreive(arrayItem[navStep], navStepIndex + 1)
+        )
+        .toArray();
+    } else {
+      // if we have a single element, then return it.
+      return deepRetreive(currentObj[navStep], navStepIndex + 1);
+    }
+  }
 }

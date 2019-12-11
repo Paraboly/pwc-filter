@@ -40,7 +40,7 @@
     "@stencil/core": "^1.3.3"
   },
   "dependencies": {
-    "@paraboly/pwc-dynamic-form": "^0.2.0",
+    "@paraboly/pwc-dynamic-form": "^0.3.3",
     "@types/linq": "^2.2.33",
     "linq": "^3.2.1"
   }
