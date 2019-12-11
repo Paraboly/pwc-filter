@@ -13,7 +13,12 @@ import {
   Watch
 } from "@stencil/core";
 import Enumerable from "linq";
-import { deepFilter, isCompoundKey, resolveJson } from "../../utils/utils";
+import {
+  deepFilter,
+  deepGet,
+  isCompoundKey,
+  resolveJson
+} from "../../utils/utils";
 import { PwcFilter } from "./PwcFilter";
 
 @Component({
@@ -184,7 +189,8 @@ export class PwcFilterComponent {
     return {
       label: item.label,
       type: item.type,
-      name: this.generateElementName(item.dataField)
+      name: this.generateElementName(item.dataField),
+      choices: this.generatePwcChoices(item.dataField)
     };
   }
 
@@ -210,5 +216,14 @@ export class PwcFilterComponent {
 
   generateElementName(dataFieldName: string): string {
     return dataFieldName.replace(".", "_") + "_elem";
+  }
+
+  generatePwcChoices(dataField: string): Array<any> {
+    return deepGet(this.resolvedData, dataField).map(val => {
+      return {
+        value: val,
+        label: val
+      };
+    });
   }
 }
