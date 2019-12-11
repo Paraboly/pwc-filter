@@ -160,14 +160,17 @@ export class PwcFilterComponent {
           config = this.generatePwcSelectConfig(
             item as PwcFilter.PwcSelectItemConfig
           );
+          break;
 
         case "color":
           config = this.generateColorPickerConfig(
             item as PwcFilter.ColorPickerItemConfig
           );
+          break;
 
         default:
           config = this.generateNativeInputConfig(item);
+          break;
       }
 
       formElementConfigs.push(config);
@@ -186,32 +189,35 @@ export class PwcFilterComponent {
   generatePwcSelectConfig(
     item: PwcFilter.PwcSelectItemConfig
   ): PwcDynamicForm.PwcSelectConfig {
-    return {
+    const config = {
       label: item.label,
       type: item.type,
       name: this.generateElementName(item.dataField),
       choices: this.generatePwcChoices(item.dataField)
     };
+    return config;
   }
 
   generateColorPickerConfig(
     item: PwcFilter.ColorPickerItemConfig
   ): PwcDynamicForm.ColorPickerConfig {
-    return {
+    const config = {
       label: item.label,
       type: item.type,
       name: this.generateElementName(item.dataField)
     };
+    return config;
   }
 
   generateNativeInputConfig(
     item: PwcFilter.ItemConfig
   ): PwcDynamicForm.NativeInputConfig {
-    return {
+    const config = {
       label: item.label,
       type: item.type,
       name: this.generateElementName(item.dataField)
     };
+    return config;
   }
 
   generateElementName(dataFieldName: string): string {
@@ -219,11 +225,12 @@ export class PwcFilterComponent {
   }
 
   generatePwcChoices(dataField: string): Array<any> {
-    return deepGet(this.resolvedData, dataField).map(val => {
+    const choices = deepGet(this.resolvedData, dataField).map(val => {
       return {
-        value: val,
-        label: val
+        value: val.toString(),
+        label: val.toString()
       };
     });
+    return choices;
   }
 }
