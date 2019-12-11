@@ -193,7 +193,8 @@ export class PwcFilterComponent {
       label: item.label,
       type: item.type,
       name: this.generateElementName(item.dataField),
-      choices: this.generatePwcChoices(item.dataField)
+      choices: this.generatePwcChoices(item.dataField),
+      distinct: item.distinct
     };
     return config;
   }
