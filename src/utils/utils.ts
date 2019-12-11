@@ -38,3 +38,7 @@ export function deepFilter(data: any, key: string, value: any) {
 export function isCompoundKey(key: string): boolean {
   return key.includes(".");
 }
+
+export function last<T>(arr: Array<T>): T {
+  return arr[arr.length - 1];
+}
