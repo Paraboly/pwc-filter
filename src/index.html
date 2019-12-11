@@ -47,8 +47,8 @@
 
         (async function() {
           await waitForSecondsAndInit(2);
-          // init();
-          initForDeepSearch();
+          init();
+          // initForDeepSearch();
         })();
 
         function initForDeepSearch() {
@@ -223,30 +223,6 @@
               quax: "Christopher Baldwin",
               grunt: "sandra@king.edu",
               bazola: true
-            }
-          ];
-
-          // Step 1: Configure the dynamic form.
-          pwcDynamicFormContent.items = [
-            {
-              type: "select-multiple",
-              name: "foo_elem",
-              label: "foo",
-              choices: data.map(d => ({ value: d["foo"], label: d["foo"] }))
-            },
-            {
-              type: "select-single",
-              name: "thud_elem",
-              label: "thud",
-              choices: data.map(d => ({
-                value: d["thud"],
-                label: d["thud"]
-              }))
-            },
-            {
-              type: "checkbox",
-              name: "bazola",
-              label: "bazola"
             }
           ];
 
