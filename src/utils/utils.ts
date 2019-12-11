@@ -1,4 +1,4 @@
-import Enumerable, { IEnumerable } from "linq";
+import Enumerable from "linq";
 
 export function resolveJson<TReturnType>(
   input: string | TReturnType
@@ -43,7 +43,6 @@ export function last<T>(arr: Array<T>): T {
 }
 
 export function deepGet(data: any, key: string): Array<any> {
-  console.log("here I ammmmm");
   const navigationSteps = key.split(".");
   const navStepIndex = 0;
 
