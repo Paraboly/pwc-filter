@@ -19,7 +19,7 @@ import {
   isCompoundKey,
   resolveJson
 } from "../../utils/utils";
-import { PwcFilter } from "./PwcFilter";
+import { PwcFilter } from "../../utils/PwcFilter";
 
 @Component({
   tag: "pwc-filter",

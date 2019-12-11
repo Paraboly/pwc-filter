@@ -9,7 +9,7 @@
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   PwcFilter,
-} from './components/pwc-filter/PwcFilter';
+} from './utils/PwcFilter';
 
 export namespace Components {
   interface PwcFilter {
