@@ -1,6 +1,6 @@
 {
   "name": "@paraboly/pwc-filter",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Automatically filter a set of data using a dynamic form.",
   "keywords": [
     "paraboly",

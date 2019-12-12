@@ -192,11 +192,12 @@ export class PwcFilterComponent {
     item: PwcFilter.PwcSelectItemConfig
   ): PwcDynamicForm.PwcSelectConfig {
     const itemClone = { ...item };
+    delete itemClone.labelProvider;
     delete itemClone.dataField;
 
     const config = {
       name: this.generateElementName(item.dataField),
-      choices: this.generatePwcChoices(item.dataField),
+      choices: this.generatePwcChoices(item.dataField, item.labelProvider),
       ...itemClone
     };
     return config;
@@ -232,11 +233,12 @@ export class PwcFilterComponent {
     return dataFieldName.replace(".", "_") + "_elem";
   }
 
-  generatePwcChoices(dataField: string): Array<any> {
+  generatePwcChoices(dataField: string, labelProvider): Array<any> {
     const choices = deepGet(this.resolvedData, dataField).map(val => {
+      const valStr = val.toString();
       return {
-        value: val.toString(),
-        label: val.toString()
+        value: valStr,
+        label: labelProvider ? labelProvider(valStr) : valStr
       };
     });
     return choices;

@@ -33,6 +33,7 @@ export namespace PwcFilter {
     type: PwcSelectType;
     distinct?: PwcChoicesDistinctMode;
     placeholder?: string;
+    labelProvider?: (value: string) => string;
   }
 
   export interface ColorPickerItemConfig
