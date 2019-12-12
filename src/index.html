@@ -46,7 +46,14 @@
         });
 
         (async function() {
-          await waitForSecondsAndInit(2);
+          init();
+          await waitForSecondsAndInit(1);
+          init();
+          await waitForSecondsAndInit(1);
+          init();
+          await waitForSecondsAndInit(1);
+          init();
+          await waitForSecondsAndInit(1);
           init();
           // initForDeepSearch();
         })();
@@ -246,17 +253,23 @@
               dataField: "foo",
               type: "select-multiple",
               label: "foo filter element",
-              distinct: "value"
+              placeholder: "Type to search..."
             },
             {
               dataField: "thud",
               type: "select-multiple",
-              label: "thud filter element"
+              label: "thud filter element",
+              distinct: "value",
+              placeholder: "Type to search...",
+              onclick: e => alert("woohoo")
             },
             {
               dataField: "bazola",
               type: "checkbox",
-              label: "bazola filter element"
+              label: "bazola filter element",
+              style: {
+                margin: "10px"
+              }
             }
           ];
         }

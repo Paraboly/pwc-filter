@@ -169,7 +169,9 @@ export class PwcFilterComponent {
           break;
 
         default:
-          config = this.generateNativeInputConfig(item);
+          config = this.generateNativeInputConfig(
+            item as PwcFilter.NativeItemConfig
+          );
           break;
       }
 
@@ -189,12 +191,13 @@ export class PwcFilterComponent {
   generatePwcSelectConfig(
     item: PwcFilter.PwcSelectItemConfig
   ): PwcDynamicForm.PwcSelectConfig {
+    const itemClone = { ...item };
+    delete itemClone.dataField;
+
     const config = {
-      label: item.label,
-      type: item.type,
       name: this.generateElementName(item.dataField),
       choices: this.generatePwcChoices(item.dataField),
-      distinct: item.distinct
+      ...itemClone
     };
     return config;
   }
@@ -202,21 +205,25 @@ export class PwcFilterComponent {
   generateColorPickerConfig(
     item: PwcFilter.ColorPickerItemConfig
   ): PwcDynamicForm.ColorPickerConfig {
+    const itemClone = { ...item };
+    delete itemClone.dataField;
+
     const config = {
-      label: item.label,
-      type: item.type,
-      name: this.generateElementName(item.dataField)
+      name: this.generateElementName(item.dataField),
+      ...itemClone
     };
     return config;
   }
 
   generateNativeInputConfig(
-    item: PwcFilter.ItemConfig
+    item: PwcFilter.NativeItemConfig
   ): PwcDynamicForm.NativeInputConfig {
+    const itemClone = { ...item };
+    delete itemClone.dataField;
+
     const config = {
-      label: item.label,
-      type: item.type,
-      name: this.generateElementName(item.dataField)
+      name: this.generateElementName(item.dataField),
+      ...itemClone
     };
     return config;
   }

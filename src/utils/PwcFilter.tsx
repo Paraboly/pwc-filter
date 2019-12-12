@@ -1,5 +1,6 @@
 import "@paraboly/pwc-dynamic-form";
 import { PwcDynamicForm } from "@paraboly/pwc-dynamic-form/dist/types/utils/PwcDynamicForm";
+import { JSXBase } from "@stencil/core/dist/declarations";
 
 export namespace PwcFilter {
   // @TODO: This should be in pwc-choices, not here.
@@ -22,10 +23,21 @@ export namespace PwcFilter {
     label: string;
   }
 
-  export interface PwcSelectItemConfig extends ItemConfig {
+  export interface NativeItemConfig
+    extends ItemConfig,
+      JSXBase.HTMLAttributes<HTMLInputElement> {}
+
+  export interface PwcSelectItemConfig
+    extends ItemConfig,
+      JSXBase.HTMLAttributes<HTMLPwcChoicesElement> {
     type: PwcSelectType;
     distinct?: PwcChoicesDistinctMode;
+    placeholder?: string;
   }
 
-  export interface ColorPickerItemConfig extends ItemConfig {}
+  export interface ColorPickerItemConfig
+    extends ItemConfig,
+      JSXBase.HTMLAttributes<HTMLColorPickerElement> {
+    type: "color";
+  }
 }
