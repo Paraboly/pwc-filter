@@ -45,6 +45,9 @@ graph TD;
   pwc-filter --> pwc-dynamic-form-content
   pwc-dynamic-form-content --> color-picker
   pwc-dynamic-form-content --> pwc-choices
+  pwc-choices --> pwc-choices-input-bar
+  pwc-choices --> pwc-choices-dropdown
+  pwc-choices-input-bar --> pwc-choices-option-bubble
   style pwc-filter fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

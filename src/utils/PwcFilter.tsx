@@ -1,19 +1,13 @@
 import "@paraboly/pwc-dynamic-form";
-import { PwcDynamicForm } from "@paraboly/pwc-dynamic-form/dist/types/utils/PwcDynamicForm";
 import { JSXBase } from "@stencil/core/dist/declarations";
+import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 
 export namespace PwcFilter {
-  // @TODO: This should be in pwc-choices, not here.
-  export type PwcSelectType =
-    | "select-single"
-    | "select-multiple"
-    | "select-text";
-
   // @TODO: This should be in pwc-choices, not here.
   export type PwcChoicesDistinctMode = "value" | "label" | "all" | "none";
 
   export interface FilterChangedEventPayload {
-    originalEvent: PwcDynamicForm.FormChangedEventPayload;
+    originalEvent: PwcDynamicFormInterfaces.FormChangedEventPayload;
     filterResult: object[];
   }
 
@@ -30,9 +24,7 @@ export namespace PwcFilter {
   export interface PwcSelectItemConfig
     extends ItemConfig,
       JSXBase.HTMLAttributes<HTMLPwcChoicesElement> {
-    type: PwcSelectType;
-    distinct?: PwcChoicesDistinctMode;
-    placeholder?: string;
+    type: PwcDynamicFormInterfaces.PwcChoicesType;
     labelProvider?: (value: string) => string;
   }
 

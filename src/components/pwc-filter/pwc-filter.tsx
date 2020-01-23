@@ -1,5 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
-import { PwcDynamicForm } from "@paraboly/pwc-dynamic-form/dist/types/utils/PwcDynamicForm";
+import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 import {
   Component,
   Element,
@@ -49,12 +49,12 @@ export class PwcFilterComponent {
 
   @Listen("formChanged")
   async formChangedHandler(
-    formChangedEventPayload: PwcDynamicForm.FormChangedEventPayload
+    formChangedEventPayload: PwcDynamicFormInterfaces.FormChangedEventPayload
   ) {
     const filterResult = await this.filter();
     this.filterChanged.emit({
       originalEvent: formChangedEventPayload,
-      filterResult: filterResult
+      filterResult
     });
   }
 
@@ -147,7 +147,7 @@ export class PwcFilterComponent {
   }
 
   generateDynamicFormContent(): HTMLPwcDynamicFormContentElement {
-    const formElementConfigs: PwcDynamicForm.ContentItemConfig[] = [];
+    const formElementConfigs: PwcDynamicFormInterfaces.ContentItemConfig[] = [];
     const mapping: { [key: string]: string } = {};
 
     for (const item of this.resolvedItems) {
@@ -190,7 +190,7 @@ export class PwcFilterComponent {
 
   generatePwcSelectConfig(
     item: PwcFilter.PwcSelectItemConfig
-  ): PwcDynamicForm.PwcSelectConfig {
+  ): PwcDynamicFormInterfaces.PwcChoicesConfig {
     const itemClone = { ...item };
     delete itemClone.labelProvider;
     delete itemClone.dataField;
@@ -205,7 +205,7 @@ export class PwcFilterComponent {
 
   generateColorPickerConfig(
     item: PwcFilter.ColorPickerItemConfig
-  ): PwcDynamicForm.ColorPickerConfig {
+  ): PwcDynamicFormInterfaces.ColorPickerConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -218,7 +218,7 @@ export class PwcFilterComponent {
 
   generateNativeInputConfig(
     item: PwcFilter.NativeItemConfig
-  ): PwcDynamicForm.NativeInputConfig {
+  ): PwcDynamicFormInterfaces.NativeInputConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -233,7 +233,7 @@ export class PwcFilterComponent {
     return dataFieldName.replace(".", "_") + "_elem";
   }
 
-  generatePwcChoices(dataField: string, labelProvider): Array<any> {
+  generatePwcChoices(dataField: string, labelProvider): any[] {
     const choices = deepGet(this.resolvedData, dataField).map(val => {
       const valStr = val.toString();
       return {

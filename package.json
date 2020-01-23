@@ -47,7 +47,7 @@
     "@stencil/core": "^1.8.5",
     "@stencil/router": "^1.0.1",
     "@stencil/sass": "^1.1.1",
-    "@types/jest": "^24.9.0",
+    "@types/jest": "^24.9.1",
     "@types/puppeteer": "^2.0.0",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
@@ -57,7 +57,7 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "dependencies": {
-    "@paraboly/pwc-dynamic-form": "^0.3.6",
+    "@paraboly/pwc-dynamic-form": "^2.0.0",
     "linq": "^3.2.1"
   }
 }
