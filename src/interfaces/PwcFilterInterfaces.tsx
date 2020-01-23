@@ -2,10 +2,7 @@ import "@paraboly/pwc-dynamic-form";
 import { JSXBase } from "@stencil/core/dist/declarations";
 import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 
-export namespace PwcFilter {
-  // @TODO: This should be in pwc-choices, not here.
-  export type PwcChoicesDistinctMode = "value" | "label" | "all" | "none";
-
+export namespace PwcFilterInterfaces {
   export interface FilterChangedEventPayload {
     originalEvent: PwcDynamicFormInterfaces.FormChangedEventPayload;
     filterResult: object[];

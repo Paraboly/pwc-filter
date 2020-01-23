@@ -19,14 +19,14 @@ import {
   isCompoundKey,
   resolveJson
 } from "../../utils/utils";
-import { PwcFilter } from "../../utils/PwcFilter";
+import { PwcFilterInterfaces } from "../../interfaces/PwcFilterInterfaces";
 
 @Component({
   tag: "pwc-filter",
   styleUrl: "pwc-filter.css",
   shadow: false
 })
-export class PwcFilterComponent {
+export class PwcFilter {
   @Element() rootElement: HTMLPwcFilterElement;
 
   private mapping: { [key: string]: string };
@@ -38,14 +38,16 @@ export class PwcFilterComponent {
     this.resolvedData = resolveJson(newDataValue);
   }
 
-  @State() resolvedItems: PwcFilter.ItemConfig[];
-  @Prop() items: string | PwcFilter.ItemConfig[];
+  @State() resolvedItems: PwcFilterInterfaces.ItemConfig[];
+  @Prop() items: string | PwcFilterInterfaces.ItemConfig[];
   @Watch("items")
-  itemsWatchHandler(newItemsValue: string | PwcFilter.ItemConfig[]) {
+  itemsWatchHandler(newItemsValue: string | PwcFilterInterfaces.ItemConfig[]) {
     this.resolvedItems = resolveJson(newItemsValue);
   }
 
-  @Event() filterChanged: EventEmitter<PwcFilter.FilterChangedEventPayload>;
+  @Event() filterChanged: EventEmitter<
+    PwcFilterInterfaces.FilterChangedEventPayload
+  >;
 
   @Listen("formChanged")
   async formChangedHandler(
@@ -158,19 +160,19 @@ export class PwcFilterComponent {
         case "select-single":
         case "select-text":
           config = this.generatePwcSelectConfig(
-            item as PwcFilter.PwcSelectItemConfig
+            item as PwcFilterInterfaces.PwcSelectItemConfig
           );
           break;
 
         case "color":
           config = this.generateColorPickerConfig(
-            item as PwcFilter.ColorPickerItemConfig
+            item as PwcFilterInterfaces.ColorPickerItemConfig
           );
           break;
 
         default:
           config = this.generateNativeInputConfig(
-            item as PwcFilter.NativeItemConfig
+            item as PwcFilterInterfaces.NativeItemConfig
           );
           break;
       }
@@ -189,7 +191,7 @@ export class PwcFilterComponent {
   }
 
   generatePwcSelectConfig(
-    item: PwcFilter.PwcSelectItemConfig
+    item: PwcFilterInterfaces.PwcSelectItemConfig
   ): PwcDynamicFormInterfaces.PwcChoicesConfig {
     const itemClone = { ...item };
     delete itemClone.labelProvider;
@@ -204,7 +206,7 @@ export class PwcFilterComponent {
   }
 
   generateColorPickerConfig(
-    item: PwcFilter.ColorPickerItemConfig
+    item: PwcFilterInterfaces.ColorPickerItemConfig
   ): PwcDynamicFormInterfaces.ColorPickerConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
@@ -217,7 +219,7 @@ export class PwcFilterComponent {
   }
 
   generateNativeInputConfig(
-    item: PwcFilter.NativeItemConfig
+    item: PwcFilterInterfaces.NativeItemConfig
   ): PwcDynamicFormInterfaces.NativeInputConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;

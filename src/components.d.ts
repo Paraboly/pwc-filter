@@ -8,14 +8,14 @@
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
-  PwcFilter,
-} from './utils/PwcFilter';
+  PwcFilterInterfaces,
+} from './interfaces/PwcFilterInterfaces';
 
 export namespace Components {
   interface PwcFilter {
     'data': string | object[];
     'filter': () => Promise<object[]>;
-    'items': string | PwcFilter.ItemConfig[];
+    'items': string | PwcFilterInterfaces.ItemConfig[];
   }
 }
 
@@ -35,8 +35,8 @@ declare global {
 declare namespace LocalJSX {
   interface PwcFilter {
     'data'?: string | object[];
-    'items'?: string | PwcFilter.ItemConfig[];
-    'onFilterChanged'?: (event: CustomEvent<PwcFilter.FilterChangedEventPayload>) => void;
+    'items'?: string | PwcFilterInterfaces.ItemConfig[];
+    'onFilterChanged'?: (event: CustomEvent<PwcFilterInterfaces.FilterChangedEventPayload>) => void;
   }
 
   interface IntrinsicElements {
