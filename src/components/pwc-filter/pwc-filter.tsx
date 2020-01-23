@@ -1,4 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
+import "@paraboly/pwc-choices";
 import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 import {
   Component,
@@ -20,6 +21,7 @@ import {
   resolveJson
 } from "../../utils/utils";
 import { PwcFilterInterfaces } from "../../interfaces/PwcFilterInterfaces";
+import { PwcChoicesInterfaces } from "@paraboly/pwc-choices/dist/types/interfaces/PwcChoicesInterfaces";
 
 @Component({
   tag: "pwc-filter",
@@ -136,10 +138,6 @@ export class PwcFilter {
     this.itemsWatchHandler(this.items);
   }
 
-  render() {
-    return <div>{this.generateDynamicForm()}</div>;
-  }
-
   generateDynamicForm(): HTMLPwcDynamicFormElement {
     return (
       <pwc-dynamic-form>
@@ -156,11 +154,10 @@ export class PwcFilter {
       let config;
 
       switch (item.type) {
-        case "select-multiple":
+        case "select-multi":
         case "select-single":
-        case "select-text":
-          config = this.generatePwcSelectConfig(
-            item as PwcFilterInterfaces.PwcSelectItemConfig
+          config = this.generatePwcChoicesConfig(
+            item as PwcFilterInterfaces.PwcChoicesItemConfig
           );
           break;
 
@@ -190,8 +187,8 @@ export class PwcFilter {
     );
   }
 
-  generatePwcSelectConfig(
-    item: PwcFilterInterfaces.PwcSelectItemConfig
+  generatePwcChoicesConfig(
+    item: PwcFilterInterfaces.PwcChoicesItemConfig
   ): PwcDynamicFormInterfaces.PwcChoicesConfig {
     const itemClone = { ...item };
     delete itemClone.labelProvider;
@@ -199,7 +196,10 @@ export class PwcFilter {
 
     const config = {
       name: this.generateElementName(item.dataField),
-      choices: this.generatePwcChoices(item.dataField, item.labelProvider),
+      options: this.generatePwcChoicesOptions(
+        item.dataField,
+        item.labelProvider
+      ),
       ...itemClone
     };
     return config;
@@ -235,14 +235,21 @@ export class PwcFilter {
     return dataFieldName.replace(".", "_") + "_elem";
   }
 
-  generatePwcChoices(dataField: string, labelProvider): any[] {
-    const choices = deepGet(this.resolvedData, dataField).map(val => {
+  generatePwcChoicesOptions(
+    dataField: string,
+    labelProvider
+  ): PwcChoicesInterfaces.IOption[] {
+    const options = deepGet(this.resolvedData, dataField).map(val => {
       const valStr = val.toString();
       return {
         value: valStr,
         label: labelProvider ? labelProvider(valStr) : valStr
       };
     });
-    return choices;
+    return options;
+  }
+
+  render() {
+    return <div>{this.generateDynamicForm()}</div>;
   }
 }

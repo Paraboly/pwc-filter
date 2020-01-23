@@ -1,4 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
+import "@paraboly/pwc-choices";
 import { JSXBase } from "@stencil/core/dist/declarations";
 import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 
@@ -18,7 +19,7 @@ export namespace PwcFilterInterfaces {
     extends ItemConfig,
       JSXBase.HTMLAttributes<HTMLInputElement> {}
 
-  export interface PwcSelectItemConfig
+  export interface PwcChoicesItemConfig
     extends ItemConfig,
       JSXBase.HTMLAttributes<HTMLPwcChoicesElement> {
     type: PwcDynamicFormInterfaces.PwcChoicesType;
