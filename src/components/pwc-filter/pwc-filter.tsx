@@ -1,5 +1,4 @@
 import "@paraboly/pwc-dynamic-form";
-import "@paraboly/pwc-choices";
 import {
   Component,
   Element,
@@ -20,7 +19,11 @@ import {
   resolveJson
 } from "../../utils/utils";
 import { PwcFilterInterfaces } from "../../interfaces/PwcFilterInterfaces";
-import { PwcChoicesInterfaces } from "@paraboly/pwc-choices/dist/types/interfaces/PwcChoicesInterfaces";
+import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
+import { ContentItemConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ContentItemConfig";
+import { PwcChoicesConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcChoicesConfig";
+import { ColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ColorPickerConfig";
+import { NativeInputConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/NativeInputConfig";
 
 @Component({
   tag: "pwc-filter",
@@ -51,9 +54,7 @@ export class PwcFilter {
   >;
 
   @Listen("formChanged")
-  async formChangedHandler(
-    formChangedEventPayload: PwcDynamicFormInterfaces.FormChangedEventPayload
-  ) {
+  async formChangedHandler(formChangedEventPayload: FormChangedEventPayload) {
     const filterResult = await this.filter();
     this.filterChanged.emit({
       originalEvent: formChangedEventPayload,
@@ -68,7 +69,9 @@ export class PwcFilter {
 
     let filteredData = this.resolvedData;
 
-    const formValues = await dynamicForm.getFieldValues(true);
+    const formValues = (await dynamicForm.getFieldValues("value")) as {
+      [key: string]: string | boolean | string[];
+    };
 
     for (const formElementName in formValues) {
       if (formValues.hasOwnProperty(formElementName)) {
@@ -101,35 +104,14 @@ export class PwcFilter {
     if (
       formElementValue === undefined ||
       formElementValue === null ||
-      (typeof formElementValue !== "boolean" && formElementValue.length === 0)
+      (formElementValue instanceof Array && formElementValue.length === 0)
     ) {
       return resolvedData;
     }
 
     const jsonFieldName = this.getMappedNameOrDefault(formElementName);
-
-    if (isCompoundKey(jsonFieldName)) {
-      const vals = deepFilter(this.data, jsonFieldName, formElementValue);
-      return vals;
-    } else {
-      if (
-        typeof formElementValue === "string" ||
-        typeof formElementValue === "boolean"
-      ) {
-        return Enumerable.from(resolvedData)
-          .where(datum => datum[jsonFieldName] == formElementValue)
-          .toArray();
-      } else {
-        return Enumerable.from(resolvedData)
-          .where(datum =>
-            Enumerable.from(formElementValue).any(
-              formElementValueSingle =>
-                formElementValueSingle == datum[jsonFieldName]
-            )
-          )
-          .toArray();
-      }
-    }
+    const vals = deepFilter(resolvedData, jsonFieldName, formElementValue);
+    return vals;
   }
 
   componentWillLoad() {
@@ -146,11 +128,11 @@ export class PwcFilter {
   }
 
   generateDynamicFormContent(): HTMLPwcDynamicFormContentElement {
-    const formElementConfigs: PwcDynamicFormInterfaces.ContentItemConfig[] = [];
+    const formElementConfigs: ContentItemConfig[] = [];
     const mapping: { [key: string]: string } = {};
 
     for (const item of this.resolvedItems) {
-      let config;
+      let config: ContentItemConfig;
 
       switch (item.type) {
         case "select-multi":
@@ -188,7 +170,7 @@ export class PwcFilter {
 
   generatePwcChoicesConfig(
     item: PwcFilterInterfaces.PwcChoicesItemConfig
-  ): PwcDynamicFormInterfaces.PwcChoicesConfig {
+  ): PwcChoicesConfig {
     const itemClone = { ...item };
     delete itemClone.labelProvider;
     delete itemClone.dataField;
@@ -206,7 +188,7 @@ export class PwcFilter {
 
   generateColorPickerConfig(
     item: PwcFilterInterfaces.ColorPickerItemConfig
-  ): PwcDynamicFormInterfaces.ColorPickerConfig {
+  ): ColorPickerConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -219,7 +201,7 @@ export class PwcFilter {
 
   generateNativeInputConfig(
     item: PwcFilterInterfaces.NativeItemConfig
-  ): PwcDynamicFormInterfaces.NativeInputConfig {
+  ): NativeInputConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -236,10 +218,10 @@ export class PwcFilter {
 
   generatePwcChoicesOptions(
     dataField: string,
-    labelProvider
-  ): PwcChoicesInterfaces.IOption[] {
+    labelProvider: PwcFilterInterfaces.LabelProviderType
+  ): { value: string; label: string }[] {
     const options = deepGet(this.resolvedData, dataField).map(val => {
-      const valStr = val.toString();
+      const valStr: string = val.toString();
       return {
         value: valStr,
         label: labelProvider ? labelProvider(valStr) : valStr

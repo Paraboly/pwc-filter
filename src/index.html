@@ -55,7 +55,8 @@
           // init();
           // await waitForSecondsAndInit(1);
           // init();
-          initForDeepSearch();
+          //initForDeepSearch();
+          init();
         })();
 
         function initForDeepSearch() {
@@ -252,18 +253,17 @@
           pwcFilter.items = [
             {
               dataField: "foo",
-              type: "select-multiple",
+              type: "select-multi",
               label: "foo filter element",
               placeholder: "Type to search...",
               labelProvider: value => "label of " + value
             },
             {
               dataField: "thud",
-              type: "select-multiple",
+              type: "select-multi",
               label: "thud filter element",
               distinct: "value",
-              placeholder: "Type to search...",
-              onclick: e => alert("woohoo")
+              placeholder: "Type to search..."
             },
             {
               dataField: "bazola",

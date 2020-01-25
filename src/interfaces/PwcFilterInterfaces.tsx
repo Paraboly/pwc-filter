@@ -1,11 +1,12 @@
 import "@paraboly/pwc-dynamic-form";
 import "@paraboly/pwc-choices";
 import { JSXBase } from "@stencil/core/dist/declarations";
-import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
+import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
+import { PwcChoicesType } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcChoicesType";
 
 export namespace PwcFilterInterfaces {
   export interface FilterChangedEventPayload {
-    originalEvent: PwcDynamicFormInterfaces.FormChangedEventPayload;
+    originalEvent: FormChangedEventPayload;
     filterResult: object[];
   }
 
@@ -19,11 +20,13 @@ export namespace PwcFilterInterfaces {
     extends ItemConfig,
       JSXBase.HTMLAttributes<HTMLInputElement> {}
 
+  export type LabelProviderType = (value: string) => string;
+
   export interface PwcChoicesItemConfig
     extends ItemConfig,
       JSXBase.HTMLAttributes<HTMLPwcChoicesElement> {
-    type: PwcDynamicFormInterfaces.PwcChoicesType;
-    labelProvider?: (value: string) => string;
+    type: PwcChoicesType;
+    labelProvider?: LabelProviderType;
   }
 
   export interface ColorPickerItemConfig

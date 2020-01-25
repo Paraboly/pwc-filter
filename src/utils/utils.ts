@@ -17,7 +17,11 @@ export function deepFilter(data: any, key: string, value: any) {
   function deepValidate(currentObj, navStepIndex: number): boolean {
     // if we are out of navigation steps, check for the value
     if (navStepIndex === navigationSteps.length) {
-      return currentObj == value;
+      if (value instanceof Array) {
+        return Enumerable.from(value).any(v => v == currentObj);
+      } else {
+        return currentObj == value;
+      }
     }
 
     const navStep = navigationSteps[navStepIndex];
