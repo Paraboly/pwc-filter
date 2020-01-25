@@ -8,18 +8,19 @@ export function resolveJson<TReturnType>(
 
 export function deepFilter(data: any, key: string, value: any) {
   const navigationSteps = key.split(".");
-  const navStepIndex = 0;
 
   return Enumerable.from(data)
-    .where(datum => deepValidate(datum, navStepIndex))
+    .where(datum => deepValidate(datum, 0))
     .toArray();
 
   function deepValidate(currentObj, navStepIndex: number): boolean {
     // if we are out of navigation steps, check for the value
     if (navStepIndex === navigationSteps.length) {
       if (value instanceof Array) {
+        // tslint:disable-next-line:triple-equals
         return Enumerable.from(value).any(v => v == currentObj);
       } else {
+        // tslint:disable-next-line:triple-equals
         return currentObj == value;
       }
     }
@@ -42,19 +43,18 @@ export function isCompoundKey(key: string): boolean {
   return key.includes(".");
 }
 
-export function last<T>(arr: Array<T>): T {
+export function last<T>(arr: T[]): T {
   return arr[arr.length - 1];
 }
 
-export function deepGet(data: any, key: string): Array<any> {
+export function deepGet(data: any, key: string): any[] {
   const navigationSteps = key.split(".");
-  const navStepIndex = 0;
 
   return Enumerable.from(data)
-    .selectMany(datum => deepRetreive(datum, navStepIndex))
+    .selectMany(datum => deepRetreive(datum, 0))
     .toArray();
 
-  function deepRetreive(currentObj, navStepIndex: number): Array<any> {
+  function deepRetreive(currentObj, navStepIndex: number): any[] {
     // if we are out of navigation steps, return the value.
     if (navStepIndex === navigationSteps.length) {
       return [currentObj];

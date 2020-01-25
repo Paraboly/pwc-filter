@@ -11,19 +11,18 @@ import {
   State,
   Watch
 } from "@stencil/core";
-import Enumerable from "linq";
-import {
-  deepFilter,
-  deepGet,
-  isCompoundKey,
-  resolveJson
-} from "../../utils/utils";
-import { PwcFilterInterfaces } from "../../interfaces/PwcFilterInterfaces";
+import { deepFilter, deepGet, resolveJson } from "../../utils/utils";
 import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
 import { ContentItemConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ContentItemConfig";
 import { PwcChoicesConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcChoicesConfig";
 import { ColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ColorPickerConfig";
 import { NativeInputConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/NativeInputConfig";
+import { ItemConfig } from "./ItemConfig";
+import { FilterChangedEventPayload } from "./FilterChangedEventPayload";
+import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
+import { ColorPickerItemConfig } from "./ColorPickerItemConfig";
+import { NativeItemConfig } from "./NativeItemConfig";
+import { LabelProviderType } from "./LabelProviderType";
 
 @Component({
   tag: "pwc-filter",
@@ -42,16 +41,14 @@ export class PwcFilter {
     this.resolvedData = resolveJson(newDataValue);
   }
 
-  @State() resolvedItems: PwcFilterInterfaces.ItemConfig[];
-  @Prop() items: string | PwcFilterInterfaces.ItemConfig[];
+  @State() resolvedItems: ItemConfig[];
+  @Prop() items: string | ItemConfig[];
   @Watch("items")
-  itemsWatchHandler(newItemsValue: string | PwcFilterInterfaces.ItemConfig[]) {
+  itemsWatchHandler(newItemsValue: string | ItemConfig[]) {
     this.resolvedItems = resolveJson(newItemsValue);
   }
 
-  @Event() filterChanged: EventEmitter<
-    PwcFilterInterfaces.FilterChangedEventPayload
-  >;
+  @Event() filterChanged: EventEmitter<FilterChangedEventPayload>;
 
   @Listen("formChanged")
   async formChangedHandler(formChangedEventPayload: FormChangedEventPayload) {
@@ -137,21 +134,17 @@ export class PwcFilter {
       switch (item.type) {
         case "select-multi":
         case "select-single":
-          config = this.generatePwcChoicesConfig(
-            item as PwcFilterInterfaces.PwcChoicesItemConfig
-          );
+          config = this.generatePwcChoicesConfig(item as PwcChoicesItemConfig);
           break;
 
         case "color":
           config = this.generateColorPickerConfig(
-            item as PwcFilterInterfaces.ColorPickerItemConfig
+            item as ColorPickerItemConfig
           );
           break;
 
         default:
-          config = this.generateNativeInputConfig(
-            item as PwcFilterInterfaces.NativeItemConfig
-          );
+          config = this.generateNativeInputConfig(item as NativeItemConfig);
           break;
       }
 
@@ -168,9 +161,7 @@ export class PwcFilter {
     );
   }
 
-  generatePwcChoicesConfig(
-    item: PwcFilterInterfaces.PwcChoicesItemConfig
-  ): PwcChoicesConfig {
+  generatePwcChoicesConfig(item: PwcChoicesItemConfig): PwcChoicesConfig {
     const itemClone = { ...item };
     delete itemClone.labelProvider;
     delete itemClone.dataField;
@@ -186,9 +177,7 @@ export class PwcFilter {
     return config;
   }
 
-  generateColorPickerConfig(
-    item: PwcFilterInterfaces.ColorPickerItemConfig
-  ): ColorPickerConfig {
+  generateColorPickerConfig(item: ColorPickerItemConfig): ColorPickerConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -199,9 +188,7 @@ export class PwcFilter {
     return config;
   }
 
-  generateNativeInputConfig(
-    item: PwcFilterInterfaces.NativeItemConfig
-  ): NativeInputConfig {
+  generateNativeInputConfig(item: NativeItemConfig): NativeInputConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 
@@ -218,7 +205,7 @@ export class PwcFilter {
 
   generatePwcChoicesOptions(
     dataField: string,
-    labelProvider: PwcFilterInterfaces.LabelProviderType
+    labelProvider: LabelProviderType
   ): { value: string; label: string }[] {
     const options = deepGet(this.resolvedData, dataField).map(val => {
       const valStr: string = val.toString();
