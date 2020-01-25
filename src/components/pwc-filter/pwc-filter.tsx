@@ -1,6 +1,5 @@
 import "@paraboly/pwc-dynamic-form";
 import "@paraboly/pwc-choices";
-import { PwcDynamicFormInterfaces } from "@paraboly/pwc-dynamic-form/dist/types/interfaces/PwcDynamicFormInterfaces";
 import {
   Component,
   Element,

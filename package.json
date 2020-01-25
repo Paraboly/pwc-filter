@@ -41,24 +41,26 @@
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "finalize": "npm run lint && npm run build && npm run format",
+    "clean": "rm -Rf .stencil/ && rm -Rf dist/ && rm -Rf loader/ && rm -Rf node_modules/ && rm -Rf www/ && rm -f ./package-lock.json && npm cache clean -f",
+    "clean-and-install": "npm run clean && npm i"
   },
   "devDependencies": {
     "@stencil/core": "^1.8.5",
     "@stencil/router": "^1.0.1",
     "@stencil/sass": "^1.1.1",
-    "@types/jest": "^24.9.1",
-    "@types/puppeteer": "^2.0.0",
-    "jest": "^25.1.0",
-    "jest-cli": "^25.1.0",
+    "@types/jest": "24.0.25",
+    "@types/puppeteer": "1.19.0",
+    "jest": "24.9.0",
+    "jest-cli": "24.9.0",
     "prettier": "^1.19.1",
-    "puppeteer": "^2.0.0",
+    "puppeteer": "1.19.0",
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.18.0"
   },
   "dependencies": {
-    "@paraboly/pwc-choices": "^3.0.0",
-    "@paraboly/pwc-dynamic-form": "^2.0.0",
+    "@paraboly/pwc-dynamic-form": "^2.0.1-1",
     "linq": "^3.2.1"
   }
 }
