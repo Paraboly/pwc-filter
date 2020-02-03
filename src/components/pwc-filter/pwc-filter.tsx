@@ -15,12 +15,12 @@ import { deepFilter, deepGet, resolveJson } from "../../utils/utils";
 import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
 import { ContentItemConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ContentItemConfig";
 import { PwcChoicesConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcChoicesConfig";
-import { ColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ColorPickerConfig";
+import { PwcColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcColorPickerConfig";
 import { NativeInputConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/NativeInputConfig";
 import { ItemConfig } from "./ItemConfig";
 import { FilterChangedEventPayload } from "./FilterChangedEventPayload";
 import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
-import { ColorPickerItemConfig } from "./ColorPickerItemConfig";
+import { PwcColorPickerItemConfig } from "./PwcColorPickerItemConfig";
 import { NativeItemConfig } from "./NativeItemConfig";
 import { LabelProviderType } from "./LabelProviderType";
 
@@ -66,9 +66,7 @@ export class PwcFilter {
 
     let filteredData = this.resolvedData;
 
-    const formValues = (await dynamicForm.getFieldValues("value")) as {
-      [key: string]: string | boolean | string[];
-    };
+    const formValues = await dynamicForm.getFieldValues();
 
     for (const formElementName in formValues) {
       if (formValues.hasOwnProperty(formElementName)) {
@@ -138,8 +136,8 @@ export class PwcFilter {
           break;
 
         case "color":
-          config = this.generateColorPickerConfig(
-            item as ColorPickerItemConfig
+          config = this.generatePwcColorPickerConfig(
+            item as PwcColorPickerItemConfig
           );
           break;
 
@@ -177,7 +175,9 @@ export class PwcFilter {
     return config;
   }
 
-  generateColorPickerConfig(item: ColorPickerItemConfig): ColorPickerConfig {
+  generatePwcColorPickerConfig(
+    item: PwcColorPickerItemConfig
+  ): PwcColorPickerConfig {
     const itemClone = { ...item };
     delete itemClone.dataField;
 

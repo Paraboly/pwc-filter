@@ -196,9 +196,9 @@ See [`pwc-choices` readme](https://github.com/Paraboly/pwc-choices#configuration
 
 See [`pwc-choices` readme](https://github.com/Paraboly/pwc-choices#configuration) for more information.
 
-#### `ColorPickerItemConfig` Interface
+#### `PwcColorPickerItemConfig` Interface
 
-`extends ItemConfig, JSXBase.HTMLAttributes<HTMLColorPickerElement>`
+`extends ItemConfig, JSXBase.HTMLAttributes<HTMLPwcColorPickerElement>`
 
 ```ts
 type: "color";
@@ -206,7 +206,7 @@ type: "color";
 
 - `type`: Only `color` is supported.
 
-This interface is used for `<color-picker>` elements. It supports all valid `<color-picker>` attributes as well as all the attributes defined in `ItemConfig` interface.
+This interface is used for `<pwc-color-picker>` elements. It supports all valid `<pwc-color-picker>` attributes as well as all the attributes defined in `ItemConfig` interface.
 
 ## `filterChanged` Event
 
