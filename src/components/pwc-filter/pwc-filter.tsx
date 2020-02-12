@@ -23,6 +23,7 @@ import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
 import { PwcColorPickerItemConfig } from "./PwcColorPickerItemConfig";
 import { NativeItemConfig } from "./NativeItemConfig";
 import { LabelProviderType } from "./LabelProviderType";
+import _ from "lodash";
 
 @Component({
   tag: "pwc-filter",
@@ -207,7 +208,7 @@ export class PwcFilter {
     dataField: string,
     labelProvider: LabelProviderType
   ): { value: string; label: string }[] {
-    const options = deepGet(this.resolvedData, dataField).map(val => {
+    const options = _.uniq(deepGet(this.resolvedData, dataField)).map(val => {
       const valStr: string = val.toString();
       return {
         value: valStr,
