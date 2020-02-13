@@ -256,10 +256,7 @@
               type: "select-multi",
               label: "foo filter element",
               placeholder: "Type to search...",
-              labelProvider: value =>
-                value === "pwc-filter___nullOrUndefined"
-                  ? "null or undefined values"
-                  : "label of " + value,
+              labelProvider: value => "label of " + value,
               distinctMode: "value"
             },
             {
@@ -279,6 +276,8 @@
             }
           ];
         }
+
+        pwcFilter.handleNullAndUndefinedSeparately = false;
       });
 
       // Below are functions to help us test the lazy loading, they are not related to the usage

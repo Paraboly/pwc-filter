@@ -5,10 +5,11 @@
 
 ## Properties
 
-| Property | Attribute | Description | Type                     | Default     |
-| -------- | --------- | ----------- | ------------------------ | ----------- |
-| `data`   | `data`    |             | `object[] \| string`     | `undefined` |
-| `items`  | `items`   |             | `ItemConfig[] \| string` | `undefined` |
+| Property                           | Attribute                              | Description                                                                                                                 | Type                     | Default     |
+| ---------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- |
+| `data`                             | `data`                                 |                                                                                                                             | `object[] \| string`     | `undefined` |
+| `handleNullAndUndefinedSeparately` | `handle-null-and-undefined-separately` | If this is true, the same string representation is assigned to null and undefined values for generated pwc-choices options. | `boolean`                | `false`     |
+| `items`                            | `items`                                |                                                                                                                             | `ItemConfig[] \| string` | `undefined` |
 
 
 ## Events

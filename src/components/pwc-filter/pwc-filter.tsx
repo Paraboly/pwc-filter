@@ -35,6 +35,8 @@ export class PwcFilter {
 
   private mapping: { [key: string]: string };
 
+  public readonly nullValuePhrase = "pwc-filter___null" as const;
+  public readonly undefinedValuePhrase = "pwc-filter___undefined" as const;
   public readonly nullOrUndefinedValuePhrase = "pwc-filter___nullOrUndefined" as const;
 
   @State() resolvedData: object[];
@@ -50,6 +52,11 @@ export class PwcFilter {
   itemsWatchHandler(newItemsValue: string | ItemConfig[]) {
     this.resolvedItems = resolveJson(newItemsValue);
   }
+
+  /**
+   * If this is true, the same string representation is assigned to null and undefined values for generated pwc-choices options.
+   */
+  @Prop() handleNullAndUndefinedSeparately: boolean = false;
 
   @Event() filterChanged: EventEmitter<FilterChangedEventPayload>;
 
@@ -108,10 +115,20 @@ export class PwcFilter {
     }
 
     if (formElementValue instanceof Array) {
+      if (formElementValue.some(a => a === this.nullValuePhrase)) {
+        _.remove(formElementValue, this.nullValuePhrase);
+        formElementValue.push(null);
+      }
+
+      if (formElementValue.some(a => a === this.undefinedValuePhrase)) {
+        _.remove(formElementValue, this.undefinedValuePhrase);
+        formElementValue.push(undefined);
+      }
+
       if (formElementValue.some(a => a === this.nullOrUndefinedValuePhrase)) {
         _.remove(formElementValue, this.nullOrUndefinedValuePhrase);
-        formElementValue.push(undefined);
         formElementValue.push(null);
+        formElementValue.push(undefined);
       }
     }
 
@@ -214,14 +231,26 @@ export class PwcFilter {
     return dataFieldName.replace(".", "_") + "_elem";
   }
 
+  generateValueStringForPwcChoicesOption(val) {
+    if (this.handleNullAndUndefinedSeparately) {
+      return val === null
+        ? this.nullValuePhrase
+        : val === undefined
+        ? this.undefinedValuePhrase
+        : val.toString();
+    } else {
+      return val === null || val === undefined
+        ? this.nullOrUndefinedValuePhrase
+        : val.toString();
+    }
+  }
+
   generatePwcChoicesOptions(
     dataField: string,
     labelProvider: LabelProviderType
   ): { value: string; label: string }[] {
     const options = _.uniq(deepGet(this.resolvedData, dataField)).map(val => {
-      const valStr: string = !val
-        ? this.nullOrUndefinedValuePhrase
-        : val.toString();
+      const valStr: string = this.generateValueStringForPwcChoicesOption(val);
       return {
         value: valStr,
         label: labelProvider ? labelProvider(valStr) : valStr

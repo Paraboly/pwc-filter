@@ -18,6 +18,10 @@ export namespace Components {
   interface PwcFilter {
     'data': string | object[];
     'filter': () => Promise<object[]>;
+    /**
+    * If this is true, the same string representation is assigned to null and undefined values for generated pwc-choices options.
+    */
+    'handleNullAndUndefinedSeparately': boolean;
     'items': string | ItemConfig[];
   }
 }
@@ -38,6 +42,10 @@ declare global {
 declare namespace LocalJSX {
   interface PwcFilter {
     'data'?: string | object[];
+    /**
+    * If this is true, the same string representation is assigned to null and undefined values for generated pwc-choices options.
+    */
+    'handleNullAndUndefinedSeparately'?: boolean;
     'items'?: string | ItemConfig[];
     'onFilterChanged'?: (event: CustomEvent<FilterChangedEventPayload>) => void;
   }
