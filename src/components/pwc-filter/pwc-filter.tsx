@@ -256,6 +256,38 @@ export class PwcFilter {
         label: labelProvider ? labelProvider(valStr) : valStr
       };
     });
+
+    if (this.handleNullAndUndefinedSeparately) {
+      _.remove(
+        options,
+        o =>
+          o.value === this.nullValuePhrase ||
+          o.value === this.undefinedValuePhrase
+      );
+      options.push({
+        value: this.nullValuePhrase,
+        label: labelProvider
+          ? labelProvider(this.nullValuePhrase)
+          : this.nullValuePhrase
+      });
+      options.push({
+        value: this.undefinedValuePhrase,
+        label: labelProvider
+          ? labelProvider(this.undefinedValuePhrase)
+          : this.undefinedValuePhrase
+      });
+    }
+
+    if (!this.handleNullAndUndefinedSeparately) {
+      _.remove(options, { value: this.nullOrUndefinedValuePhrase });
+      options.push({
+        value: this.nullOrUndefinedValuePhrase,
+        label: labelProvider
+          ? labelProvider(this.nullOrUndefinedValuePhrase)
+          : this.nullOrUndefinedValuePhrase
+      });
+    }
+
     return options;
   }
 
