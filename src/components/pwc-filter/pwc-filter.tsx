@@ -35,6 +35,8 @@ export class PwcFilter {
 
   private mapping: { [key: string]: string };
 
+  public readonly nullOrUndefinedValuePhrase = "pwc-filter___nullOrUndefined" as const;
+
   @State() resolvedData: object[];
   @Prop() data: string | object[];
   @Watch("data")
@@ -103,6 +105,14 @@ export class PwcFilter {
       (formElementValue instanceof Array && formElementValue.length === 0)
     ) {
       return resolvedData;
+    }
+
+    if (formElementValue instanceof Array) {
+      if (formElementValue.some(a => a === this.nullOrUndefinedValuePhrase)) {
+        _.remove(formElementValue, this.nullOrUndefinedValuePhrase);
+        formElementValue.push(undefined);
+        formElementValue.push(null);
+      }
     }
 
     const jsonFieldName = this.getMappedNameOrDefault(formElementName);
@@ -209,7 +219,9 @@ export class PwcFilter {
     labelProvider: LabelProviderType
   ): { value: string; label: string }[] {
     const options = _.uniq(deepGet(this.resolvedData, dataField)).map(val => {
-      const valStr: string = val.toString();
+      const valStr: string = !val
+        ? this.nullOrUndefinedValuePhrase
+        : val.toString();
       return {
         value: valStr,
         label: labelProvider ? labelProvider(valStr) : valStr

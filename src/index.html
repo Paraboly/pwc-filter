@@ -215,7 +215,7 @@
             },
             {
               index: 8,
-              foo: 10,
+              foo: null,
               bar: 12.8977,
               baz: "Amanda",
               thud: "Houston",
@@ -225,7 +225,7 @@
             },
             {
               index: 9,
-              foo: 40,
+              foo: undefined,
               bar: 13.304,
               baz: "Colleen",
               thud: "Gross",
@@ -256,7 +256,11 @@
               type: "select-multi",
               label: "foo filter element",
               placeholder: "Type to search...",
-              labelProvider: value => "label of " + value
+              labelProvider: value =>
+                value === "pwc-filter___nullOrUndefined"
+                  ? "null or undefined values"
+                  : "label of " + value,
+              distinctMode: "value"
             },
             {
               dataField: "thud",

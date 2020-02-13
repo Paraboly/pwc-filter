@@ -1,4 +1,5 @@
 import Enumerable from "linq";
+// import _ from "lodash";
 
 export function resolveJson<TReturnType>(
   input: string | TReturnType
@@ -75,3 +76,27 @@ export function deepGet(data: any, key: string): any[] {
     }
   }
 }
+
+// function deepReplace(data, oldValue, newValue) {
+//   // we catch the value, just replace it and shortcut.
+//   if (data === oldValue) {
+//     return newValue;
+//   }
+
+//   // don't iterate characters of a string.
+//   if (typeof data === "string") {
+//     return data;
+//   }
+
+//   // we have an array, iterate over all elements.
+//   if (data instanceof Array) {
+//     return data.map(item => deepReplace(item, oldValue, newValue));
+//   }
+
+//   // we have an object, iterate over properties.
+//   return _.transform(
+//     data,
+//     (r: any, v: any, k: any) =>
+//       (r[k.trim()] = deepReplace(v, oldValue, newValue))
+//   );
+// }
