@@ -31,18 +31,15 @@
           .querySelector("#filter-to-console")
           .addEventListener("click", e => {
             pwcFilter.filter().then(filtered => {
-              console.log("filtered data: ");
-              console.log(filtered);
+              console.log("filtered data: ", filtered);
             });
           });
 
         // You can listen to the "filterChaned" event to get the
         // freshly filtered data when the dynamic form changes.
         pwcFilter.addEventListener("filterChanged", e => {
-          console.log("filter changed event:");
-          console.log(e);
-          console.log("new filter result:");
-          console.log(e.detail.filterResult);
+          console.log("filter changed event:", e);
+          console.log("new filter result:", e.detail.filterResult);
         });
 
         (async function() {
@@ -253,20 +250,24 @@
           pwcFilter.items = [
             {
               dataField: "foo",
+              name: "foo_filter",
               type: "select-multi",
               label: "foo filter element",
+              distinctMode: "value",
               placeholder: "Type to search...",
               labelProvider: value => "label of " + value
             },
             {
               dataField: "thud",
+              name: "thud_filter",
               type: "select-multi",
               label: "thud filter element",
-              distinct: "value",
+              distinctMode: "value",
               placeholder: "Type to search..."
             },
             {
               dataField: "bazola",
+              name: "bazola_filter",
               type: "checkbox",
               label: "bazola filter element",
               style: {

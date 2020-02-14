@@ -1,29 +1,31 @@
 import "@paraboly/pwc-dynamic-form";
+
+import { ContentItemConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-field/ContentItemConfig";
+import { NativeInputConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-field/NativeInputConfig";
+import { PwcChoicesConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-field/PwcChoicesConfig";
+import { PwcColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-field/PwcColorPickerConfig";
+import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
 import {
+  h,
   Component,
   Element,
   Event,
   EventEmitter,
-  h,
   Listen,
   Method,
   Prop,
   State,
   Watch
 } from "@stencil/core";
+import _ from "lodash";
+
 import { deepFilter, deepGet, resolveJson } from "../../utils/utils";
-import { FormChangedEventPayload } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormChangedEventPayload";
-import { ContentItemConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/ContentItemConfig";
-import { PwcChoicesConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcChoicesConfig";
-import { PwcColorPickerConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/PwcColorPickerConfig";
-import { NativeInputConfig } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form-content/NativeInputConfig";
-import { ItemConfig } from "./ItemConfig";
 import { FilterChangedEventPayload } from "./FilterChangedEventPayload";
+import { ItemConfig } from "./ItemConfig";
+import { LabelProviderType } from "./LabelProviderType";
+import { NativeItemConfig } from "./NativeItemConfig";
 import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
 import { PwcColorPickerItemConfig } from "./PwcColorPickerItemConfig";
-import { NativeItemConfig } from "./NativeItemConfig";
-import { LabelProviderType } from "./LabelProviderType";
-import _ from "lodash";
 
 @Component({
   tag: "pwc-filter",

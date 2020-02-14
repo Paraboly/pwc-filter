@@ -44,11 +44,13 @@ Type: `Promise<object[]>`
 graph TD;
   pwc-filter --> pwc-dynamic-form
   pwc-filter --> pwc-dynamic-form-content
-  pwc-dynamic-form-content --> pwc-color-picker
-  pwc-dynamic-form-content --> pwc-choices
+  pwc-dynamic-form-content --> pwc-dynamic-form-field
+  pwc-dynamic-form-field --> pwc-color-picker
+  pwc-dynamic-form-field --> pwc-choices
   pwc-choices --> pwc-choices-input-bar
   pwc-choices --> pwc-choices-dropdown
   pwc-choices-input-bar --> pwc-choices-option-bubble
+  pwc-choices-dropdown --> pwc-choices-dropdown-item
   style pwc-filter fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
