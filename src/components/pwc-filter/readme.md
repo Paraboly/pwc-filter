@@ -56,14 +56,14 @@ Type: `Promise<void>`
 
 ### Depends on
 
-- pwc-dynamic-form
 - pwc-dynamic-form-content
+- pwc-dynamic-form
 
 ### Graph
 ```mermaid
 graph TD;
-  pwc-filter --> pwc-dynamic-form
   pwc-filter --> pwc-dynamic-form-content
+  pwc-filter --> pwc-dynamic-form
   pwc-dynamic-form-content --> pwc-dynamic-form-field
   pwc-dynamic-form-field --> pwc-color-picker
   pwc-dynamic-form-field --> pwc-choices
