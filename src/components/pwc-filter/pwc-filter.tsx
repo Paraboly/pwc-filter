@@ -36,6 +36,7 @@ export class PwcFilter {
   @Element() rootElement: HTMLPwcFilterElement;
 
   private mapping: { [key: string]: string };
+  private itemsAddedViaMethod: ItemConfig[] = [];
 
   public readonly nullValuePhrase = "pwc-filter___null" as const;
   public readonly undefinedValuePhrase = "pwc-filter___undefined" as const;
@@ -53,6 +54,7 @@ export class PwcFilter {
   @Watch("items")
   itemsWatchHandler(newItemsValue: string | ItemConfig[]) {
     this.resolvedItems = resolveJson(newItemsValue);
+    this.resolvedItems = [...this.resolvedItems, ...this.itemsAddedViaMethod];
   }
 
   /**
@@ -69,6 +71,20 @@ export class PwcFilter {
       originalEvent: formChangedEventPayload,
       filterResult
     });
+  }
+
+  @Method()
+  async addItem(config: ItemConfig) {
+    this.itemsAddedViaMethod = [...this.itemsAddedViaMethod, config];
+    this.resolvedItems = [...this.resolvedItems, config];
+    this.rootElement.forceUpdate();
+  }
+
+  @Method()
+  async removeItem(id: string) {
+    _.remove(this.itemsAddedViaMethod, { id });
+    _.remove(this.resolvedItems, { id });
+    this.rootElement.forceUpdate();
   }
 
   @Method() async filter(): Promise<object[]> {
@@ -142,14 +158,6 @@ export class PwcFilter {
   componentWillLoad() {
     this.dataWatchHandler(this.data);
     this.itemsWatchHandler(this.items);
-  }
-
-  generateDynamicForm(): HTMLPwcDynamicFormElement {
-    return (
-      <pwc-dynamic-form>
-        {this.resolvedItems && this.generateDynamicFormContent()}
-      </pwc-dynamic-form>
-    );
   }
 
   generateDynamicFormContent(): HTMLPwcDynamicFormContentElement {
@@ -294,6 +302,10 @@ export class PwcFilter {
   }
 
   render() {
-    return <div>{this.generateDynamicForm()}</div>;
+    return (
+      <pwc-dynamic-form>
+        {this.resolvedItems && this.generateDynamicFormContent()}
+      </pwc-dynamic-form>
+    );
   }
 }

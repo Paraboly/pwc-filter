@@ -21,6 +21,16 @@
 
 ## Methods
 
+### `addItem(config: ItemConfig) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `filter() => Promise<object[]>`
 
 
@@ -28,6 +38,16 @@
 #### Returns
 
 Type: `Promise<object[]>`
+
+
+
+### `removeItem(id: string) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
 
 
 

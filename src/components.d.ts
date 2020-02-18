@@ -16,6 +16,7 @@ import {
 
 export namespace Components {
   interface PwcFilter {
+    'addItem': (config: ItemConfig) => Promise<void>;
     'data': string | object[];
     'filter': () => Promise<object[]>;
     /**
@@ -23,6 +24,7 @@ export namespace Components {
     */
     'handleNullAndUndefinedSeparately': boolean;
     'items': string | ItemConfig[];
+    'removeItem': (id: string) => Promise<void>;
   }
 }
 

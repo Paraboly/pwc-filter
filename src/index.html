@@ -18,6 +18,12 @@
 
     <input type="button" id="filter-to-console" value="Filter to console" />
 
+    <div style="margin-top: 25px; margin-bottom: 25px"></div>
+
+    <input type="text" id="item-id" placeholder="Item ID" />
+    <button id="remove-item-button">Remove Item</button>
+    <button id="add-item-button">Add Item</button>
+
     <script>
       document.addEventListener("DOMContentLoaded", e => {
         const pwcFilter = document.querySelector("pwc-filter");
@@ -41,6 +47,26 @@
           console.log("filter changed event:", e);
           console.log("new filter result:", e.detail.filterResult);
         });
+
+        document
+          .querySelector("#add-item-button")
+          .addEventListener("click", e => {
+            const id = document.querySelector("#item-id").value;
+            pwcFilter.addItem({
+              dataField: "bazola",
+              type: "checkbox",
+              name: id,
+              id: id,
+              label: "cb1-label"
+            });
+          });
+
+        document
+          .querySelector("#remove-item-button")
+          .addEventListener("click", e => {
+            const id = document.querySelector("#item-id").value;
+            pwcFilter.removeItem(id);
+          });
 
         (async function() {
           // init();
@@ -255,7 +281,8 @@
               label: "foo filter element",
               distinctMode: "value",
               placeholder: "Type to search...",
-              labelProvider: value => "label of " + value
+              labelProvider: value => "label of " + value,
+              dropdownSelectionBehaviour: "accumulate"
             },
             {
               dataField: "thud",
