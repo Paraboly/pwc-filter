@@ -1,4 +1,5 @@
 import Enumerable from "linq";
+import _ from "lodash";
 // import _ from "lodash";
 
 export function resolveJson<TReturnType>(
@@ -100,3 +101,13 @@ export function deepGet(data: any, key: string): any[] {
 //       (r[k.trim()] = deepReplace(v, oldValue, newValue))
 //   );
 // }
+
+export function moveIndexToEnd(arr, index: number) {
+  const removed = arr.splice(index, 1);
+  arr.push(...removed);
+}
+
+export function moveItemToEnd(arr: any[], item) {
+  const removed = _.remove(arr, item);
+  arr.push(...removed);
+}

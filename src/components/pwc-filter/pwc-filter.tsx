@@ -19,7 +19,12 @@ import {
 } from "@stencil/core";
 import _ from "lodash";
 
-import { deepFilter, deepGet, resolveJson } from "../../utils/utils";
+import {
+  deepFilter,
+  deepGet,
+  resolveJson,
+  moveItemToEnd
+} from "../../utils/utils";
 import { FilterChangedEventPayload } from "./FilterChangedEventPayload";
 import { ItemConfig } from "./ItemConfig";
 import { LabelProviderType } from "./LabelProviderType";
@@ -267,36 +272,24 @@ export class PwcFilter {
       };
     });
 
-    if (this.handleNullAndUndefinedSeparately) {
-      _.remove(
-        options,
-        o =>
-          o.value === this.nullValuePhrase ||
-          o.value === this.undefinedValuePhrase
-      );
-      options.push({
-        value: this.nullValuePhrase,
-        label: labelProvider
-          ? labelProvider(this.nullValuePhrase)
-          : this.nullValuePhrase
+    if (!this.handleNullAndUndefinedSeparately) {
+      const removed = _.remove(options, {
+        value: this.nullOrUndefinedValuePhrase
       });
-      options.push({
-        value: this.undefinedValuePhrase,
-        label: labelProvider
-          ? labelProvider(this.undefinedValuePhrase)
-          : this.undefinedValuePhrase
-      });
+
+      if (removed.length > 0) {
+        options.push({
+          value: this.nullOrUndefinedValuePhrase,
+          label: labelProvider
+            ? labelProvider(this.nullOrUndefinedValuePhrase)
+            : this.nullOrUndefinedValuePhrase
+        });
+      }
     }
 
-    if (!this.handleNullAndUndefinedSeparately) {
-      _.remove(options, { value: this.nullOrUndefinedValuePhrase });
-      options.push({
-        value: this.nullOrUndefinedValuePhrase,
-        label: labelProvider
-          ? labelProvider(this.nullOrUndefinedValuePhrase)
-          : this.nullOrUndefinedValuePhrase
-      });
-    }
+    moveItemToEnd(options, { value: this.nullValuePhrase });
+    moveItemToEnd(options, { value: this.undefinedValuePhrase });
+    moveItemToEnd(options, { value: this.nullOrUndefinedValuePhrase });
 
     return options;
   }
