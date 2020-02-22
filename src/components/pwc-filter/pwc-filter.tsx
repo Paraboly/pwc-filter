@@ -267,36 +267,27 @@ export class PwcFilter {
     labelProvider: LabelProviderType,
     iconProvider: IconProviderType
   ): { value: string; label: string }[] {
-    const options = _.uniq(deepGet(this.resolvedData, dataField)).map(val => {
-      const valStr: string = this.generateValueStringForPwcChoicesOption(val);
+    const values = _.uniq(
+      deepGet(this.resolvedData, dataField).map(v =>
+        this.generateValueStringForPwcChoicesOption(v)
+      )
+    );
+
+    const moveToBottomArr = [
+      this.nullValuePhrase,
+      this.undefinedValuePhrase,
+      this.nullOrUndefinedValuePhrase
+    ];
+
+    moveItemToEnd(values, v => moveToBottomArr.includes(v));
+
+    const options = values.map(valStr => {
       return {
         value: valStr,
         label: labelProvider ? labelProvider(valStr) : valStr,
         icon: iconProvider ? iconProvider(valStr) : undefined
       };
     });
-
-    if (!this.handleNullAndUndefinedSeparately) {
-      const removed = _.remove(options, {
-        value: this.nullOrUndefinedValuePhrase
-      });
-
-      if (removed.length > 0) {
-        options.push({
-          value: this.nullOrUndefinedValuePhrase,
-          label: labelProvider
-            ? labelProvider(this.nullOrUndefinedValuePhrase)
-            : this.nullOrUndefinedValuePhrase,
-          icon: iconProvider
-            ? iconProvider(this.nullOrUndefinedValuePhrase)
-            : undefined
-        });
-      }
-    }
-
-    moveItemToEnd(options, { value: this.nullValuePhrase });
-    moveItemToEnd(options, { value: this.undefinedValuePhrase });
-    moveItemToEnd(options, { value: this.nullOrUndefinedValuePhrase });
 
     return options;
   }
