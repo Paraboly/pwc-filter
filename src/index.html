@@ -288,7 +288,17 @@
               distinctMode: "value",
               placeholder: "Type to search...",
               labelProvider: value => "label of " + value,
-              dropdownSelectionBehaviour: "accumulate"
+              iconProvider: value => {
+                return {
+                  src:
+                    "https://www.drupal.org/files/styles/grid-3-2x/public/project-images/mWrrADXf_400x400.jpg",
+                  width: "20px",
+                  height: "20px",
+                  placement: "left"
+                };
+              },
+              displayIconsOnInputBar: true,
+              dropdownSelectionBehaviour: "toggle"
             },
             {
               dataField: "thud",

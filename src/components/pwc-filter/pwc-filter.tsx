@@ -31,6 +31,7 @@ import { LabelProviderType } from "./LabelProviderType";
 import { NativeItemConfig } from "./NativeItemConfig";
 import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
 import { PwcColorPickerItemConfig } from "./PwcColorPickerItemConfig";
+import { IconProviderType } from "./IconProviderType";
 
 @Component({
   tag: "pwc-filter",
@@ -211,7 +212,8 @@ export class PwcFilter {
       name: this.generateElementName(item.dataField),
       options: this.generatePwcChoicesOptions(
         item.dataField,
-        item.labelProvider
+        item.labelProvider,
+        item.iconProvider
       ),
       ...itemClone
     };
@@ -262,13 +264,15 @@ export class PwcFilter {
 
   generatePwcChoicesOptions(
     dataField: string,
-    labelProvider: LabelProviderType
+    labelProvider: LabelProviderType,
+    iconProvider: IconProviderType
   ): { value: string; label: string }[] {
     const options = _.uniq(deepGet(this.resolvedData, dataField)).map(val => {
       const valStr: string = this.generateValueStringForPwcChoicesOption(val);
       return {
         value: valStr,
-        label: labelProvider ? labelProvider(valStr) : valStr
+        label: labelProvider ? labelProvider(valStr) : valStr,
+        icon: iconProvider ? iconProvider(valStr) : undefined
       };
     });
 
@@ -282,7 +286,10 @@ export class PwcFilter {
           value: this.nullOrUndefinedValuePhrase,
           label: labelProvider
             ? labelProvider(this.nullOrUndefinedValuePhrase)
-            : this.nullOrUndefinedValuePhrase
+            : this.nullOrUndefinedValuePhrase,
+          icon: iconProvider
+            ? iconProvider(this.nullOrUndefinedValuePhrase)
+            : undefined
         });
       }
     }
