@@ -59,7 +59,7 @@
     "tslint-config-prettier": "^1.18.0"
   },
   "dependencies": {
-    "@paraboly/pwc-dynamic-form": "^6.3.0",
+    "@paraboly/pwc-dynamic-form": "^6.3.1",
     "linq": "^3.2.1",
     "lodash": "^4.17.15"
   }
