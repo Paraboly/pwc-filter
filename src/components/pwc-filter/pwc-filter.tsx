@@ -32,6 +32,7 @@ import { NativeItemConfig } from "./NativeItemConfig";
 import { PwcChoicesItemConfig } from "./PwcChoicesItemConfig";
 import { PwcColorPickerItemConfig } from "./PwcColorPickerItemConfig";
 import { IconProviderType } from "./IconProviderType";
+import { FormValuesType } from "@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormValuesType";
 
 @Component({
   tag: "pwc-filter",
@@ -41,32 +42,52 @@ import { IconProviderType } from "./IconProviderType";
 export class PwcFilter {
   @Element() rootElement: HTMLPwcFilterElement;
 
-  private mapping: { [key: string]: string };
+  private mapping: { [key: string]: string } = {};
   private itemsAddedViaMethod: ItemConfig[] = [];
 
   public readonly nullValuePhrase = "pwc-filter___null" as const;
   public readonly undefinedValuePhrase = "pwc-filter___undefined" as const;
   public readonly nullOrUndefinedValuePhrase = "pwc-filter___nullOrUndefined" as const;
 
+  private readonly defaultData = [];
   @State() resolvedData: object[];
   @Prop() data: string | object[];
   @Watch("data")
   dataWatchHandler(newDataValue: string | object[]) {
-    this.resolvedData = resolveJson(newDataValue);
+    if (newDataValue === null || newDataValue === undefined) {
+      this.data = this.defaultData;
+    } else {
+      this.resolvedData = resolveJson(newDataValue);
+    }
   }
 
+  private readonly defaultItems = [];
   @State() resolvedItems: ItemConfig[];
   @Prop() items: string | ItemConfig[];
   @Watch("items")
   itemsWatchHandler(newItemsValue: string | ItemConfig[]) {
-    this.resolvedItems = resolveJson(newItemsValue);
-    this.resolvedItems = [...this.resolvedItems, ...this.itemsAddedViaMethod];
+    if (newItemsValue === null || newItemsValue === undefined) {
+      this.items = this.defaultItems;
+    } else {
+      this.resolvedItems = [
+        ...resolveJson(newItemsValue),
+        ...this.itemsAddedViaMethod
+      ];
+    }
   }
 
+  private readonly defaultHandleNullAndUndefinedSeparately = false;
   /**
    * If this is true, the same string representation is assigned to null and undefined values for generated pwc-choices options.
    */
-  @Prop() handleNullAndUndefinedSeparately: boolean = false;
+  @Prop() handleNullAndUndefinedSeparately: boolean = this
+    .defaultHandleNullAndUndefinedSeparately;
+  @Watch("handleNullAndUndefinedSeparately")
+  handleNullAndUndefinedSeparatelyWatchHandler(newValue) {
+    if (newValue === null || newValue === undefined) {
+      this.handleNullAndUndefinedSeparately = this.defaultHandleNullAndUndefinedSeparately;
+    }
+  }
 
   @Event() filterChanged: EventEmitter<FilterChangedEventPayload>;
 
@@ -81,16 +102,21 @@ export class PwcFilter {
 
   @Method()
   async addItem(config: ItemConfig) {
-    this.itemsAddedViaMethod = [...this.itemsAddedViaMethod, config];
-    this.resolvedItems = [...this.resolvedItems, config];
-    this.rootElement.forceUpdate();
+    if (config) {
+      this.itemsAddedViaMethod = [...this.itemsAddedViaMethod, config];
+      this.resolvedItems = [...this.resolvedItems, config];
+      this.rootElement.forceUpdate();
+    }
   }
 
   @Method()
   async removeItem(id: string) {
-    _.remove(this.itemsAddedViaMethod, { id });
-    _.remove(this.resolvedItems, { id });
+    const removedItemA = _.remove(this.itemsAddedViaMethod, { id });
+    const removedItemB = _.remove(this.resolvedItems, { id });
     this.rootElement.forceUpdate();
+    return removedItemA && removedItemA.length > 0
+      ? removedItemA
+      : removedItemB;
   }
 
   @Method() async filter(): Promise<object[]> {
@@ -98,9 +124,30 @@ export class PwcFilter {
       "pwc-dynamic-form"
     ) as HTMLPwcDynamicFormElement;
 
-    let filteredData = this.resolvedData;
+    let formValues: FormValuesType;
 
-    const formValues = await dynamicForm.getFieldValues();
+    try {
+      formValues = await dynamicForm.getFieldValues();
+    } catch (e) {
+      // tslint:disable-next-line: no-console
+      console.error(
+        "Exception while reading dynamic form field values.",
+        "Returning the whole dataset without any filters.",
+        e
+      );
+      return this.resolvedData;
+    }
+
+    if (formValues === null || formValues === undefined || formValues === {}) {
+      // tslint:disable-next-line: no-console
+      console.warn(
+        "Dynamic form field values are empty.",
+        "Returning the whole dataset without any filters."
+      );
+      return this.resolvedData;
+    }
+
+    let filteredData = this.resolvedData;
 
     for (const formElementName in formValues) {
       if (formValues.hasOwnProperty(formElementName)) {
@@ -164,6 +211,9 @@ export class PwcFilter {
   componentWillLoad() {
     this.dataWatchHandler(this.data);
     this.itemsWatchHandler(this.items);
+    this.handleNullAndUndefinedSeparatelyWatchHandler(
+      this.handleNullAndUndefinedSeparately
+    );
   }
 
   generateDynamicFormContent(): HTMLPwcDynamicFormContentElement {
@@ -204,7 +254,7 @@ export class PwcFilter {
   }
 
   generatePwcChoicesConfig(item: PwcChoicesItemConfig): PwcChoicesConfig {
-    const itemClone = { ...item };
+    const itemClone = _.cloneDeep(item);
     delete itemClone.labelProvider;
     delete itemClone.dataField;
 
@@ -223,7 +273,7 @@ export class PwcFilter {
   generatePwcColorPickerConfig(
     item: PwcColorPickerItemConfig
   ): PwcColorPickerConfig {
-    const itemClone = { ...item };
+    const itemClone = _.cloneDeep(item);
     delete itemClone.dataField;
 
     const config = {

@@ -13,6 +13,9 @@ import {
 import {
   FilterChangedEventPayload,
 } from './components/pwc-filter/FilterChangedEventPayload';
+import {
+  FormValuesType,
+} from '@paraboly/pwc-dynamic-form/dist/types/components/pwc-dynamic-form/FormValuesType';
 
 export namespace Components {
   interface PwcFilter {
@@ -24,7 +27,7 @@ export namespace Components {
     */
     'handleNullAndUndefinedSeparately': boolean;
     'items': string | ItemConfig[];
-    'removeItem': (id: string) => Promise<void>;
+    'removeItem': (id: string) => Promise<ItemConfig[]>;
   }
 }
 
